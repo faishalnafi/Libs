@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Form</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <style>
+      body {
+        background: url('https://source.unsplash.com/1600x900/?nature,abstract') no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      .glass-form {
+        backdrop-filter: blur(15px);
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 400px;
+        margin: 80px auto;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        color: #fff;
+      }
+
+      .glass-form label,
+      .glass-form input {
+        color: #fff;
+      }
+
+      ::placeholder {
+        color: #eee !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="glass-form">
+        <h4 class="text-center mb-4">Upload Your Photo</h4>
+        <form id="submit-to-google-sheet">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              class="form-control"
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Enter your name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="media">Upload JPG Photo (max 5MB)</label>
+            <input
+              class="form-control-file"
+              type="file"
+              name="media"
+              id="media"
+              accept=".jpg, .jpeg"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-light btn-block mt-3">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbyLrp4OlaxXDZqOigX4bwzNlzV16rmG8C3fHhjmhRz2TwYf_hxFIWr3mwmam0xQeW0J/exec";
+      const form = document.forms["submit-to-google-sheet"];
+      const fileInput = document.getElementById("media");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        // Validate file input
+        if (fileInput.files.length === 0) {
+          swal("Error", "Please upload a photo.", "error");
+          return;
+        }
+
+        const file = fileInput.files[0];
+        const fileType = file.type;
+
+        if (!["image/jpeg", "image/jpg"].includes(fileType)) {
+          swal("Error", "Only JPG files are allowed.", "error");
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          swal("Error", "File size must be less than 5MB.", "error");
+          return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = async function () {
+          formData.append("media", reader.result.split(",")[1]); // base64
+          await submitForm(formData);
+        };
+
+        reader.readAsDataURL(file);
+      });
+
+      async function submitForm(formData) {
+        const submitButton = document.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        submitButton.innerText = "Uploading...";
+
+        fetch(scriptURL, { method: "POST", body: formData })
+          .then((response) => {
+            swal("Success", "Your photo was submitted!", "success");
+            form.reset();
+          })
+          .catch((error) => {
+            swal("Error", "Something went wrong. Try again.", "error");
+          })
+          .finally(() => {
+            submitButton.disabled = false;
+            submitButton.innerText = "Submit";
+          });
+      }
+    </script>
+  </body>
+</html>
