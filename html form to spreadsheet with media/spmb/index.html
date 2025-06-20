@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Ulang SMAN 1 Gedeg 2025/2026</title>
+    <link rel="icon" type="image/png" href="https://partisipasi.smage.my.id/logo_smansage.png">
+    <meta name="robots" content="noindex, nofollow">
+  
+    <!-- Meta tags untuk SEO dan berbagi -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulir Daftar Ulang SPMB SMA Negeri 1 Gedeg.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <style>
+        :root {
+            --primary: #40A69F;
+            --secondary: #4F46B4;
+            --primary-light: rgba(64, 166, 159, 0.2);
+            --secondary-light: rgba(79, 70, 180, 0.2);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        
+        .glass-dark {
+            background: rgba(64, 166, 159, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        
+        .liquid-shape {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #368e88;
+            transform: translateY(-2px);
+        }
+        
+        .btn-logout {
+            background-color: #DC2527;      /* Set the background color for logout button */
+            color: white;                   /* Text color */
+            transition: all 0.3s ease;     /* Smooth transition for hover effects */
+        }
+        
+        .btn-logout:hover {
+            background-color: #A31014;      /* Darker shade on hover for effect */
+            transform: translateY(-2px);    /* Slight elevation on hover */
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #413a9a;
+            transform: translateY(-2px);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(64, 166, 159, 0.2);
+        }
+        
+        .section-title {
+            color: var(--secondary);
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .section-title::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 4px;
+        }
+        
+        .form-section {
+            transition: all 0.5s ease;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-light), var(--secondary-light));
+            z-index: -1;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        
+        .animate-float {
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .animate-float-delay {
+            animation: float 10s ease-in-out 1s infinite;
+        }
+        
+        .card-highlight {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        /* Improved mobile responsiveness */
+        @media (max-width: 640px) {
+            .container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            
+            .glass, .glass-dark {
+                padding: 1rem;
+                border-radius: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            input, select, textarea {
+                font-size: 0.95rem;
+            }
+            
+            label {
+                font-size: 0.85rem;
+            }
+            
+            .liquid-shape {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden">
+    <!-- Decorative elements -->
+    <div class="liquid-shape top-0 left-0 animate-float"></div>
+    <div class="liquid-shape bottom-0 right-0 animate-float-delay"></div>
+    <div class="bubble w-20 h-20 top-1/4 left-10 animate-float"></div>
+    <div class="bubble w-16 h-16 bottom-1/4 right-10 animate-float-delay"></div>
+    <div class="bubble w-24 h-24 top-3/4 left-1/3 animate-float"></div>
+    
+    <div class="container mx-auto px-4 py-6 sm:py-8">
+        <!-- Header -->
+        <div class="glass rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-gradient-to-br from-primary to-secondary opacity-10"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br from-secondary to-primary opacity-10"></div>
+            
+            <img src="https://partisipasi.smage.my.id/logo_smansage.png" alt="Logo Sekolah" class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-2">
+            
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2">Pendaftaran Ulang Calon Murid Baru</h1>
+            <h2 class="text-lg sm:text-xl md:text-2xl font-semibold text-primary mb-1">SMA Negeri 1 Gedeg</h2>
+            <p class="text-sm sm:text-base text-gray-600">Tahun Pelajaran 2025/2026</p>
+        </div>
+        
+        <!-- Login Section -->
+        <div id="loginSection" class="glass rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 max-w-md mx-auto">
+            <h2 class="text-lg sm:text-xl font-semibold text-center text-gray-800 mb-4 sm:mb-6">Login Pendaftaran</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="nisn" class="block text-sm font-medium text-gray-700 mb-1">Nomor Induk Siswa Nasional (NISN)</label>
+                    <input type="text" id="nisn" name="nisn" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" minlength="10" maxlength="10" placeholder="Masukkan NISN" required>
+                </div>
+                <div>
+                    <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                    <input type="date" id="birthdate" name="birthdate" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                </div>
+                <button type="submit" class="w-full btn-primary py-2 px-4 rounded-lg font-medium">Masuk</button>
+              <hr>
+            </form>
+            <div id="loginError" class="mt-4 text-red-500 text-center hidden"></div>
+        </div>
+        
+        <!-- Registration Form Section -->
+        <div id="registrationSection" class="hidden">
+            <div id="alreadyRegistered" class="glass rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 hidden">
+                <div class="text-center">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Anda Sudah Terdaftar!</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mb-4">Tunjukkan halaman ini kepada verifikator berkas.</p>
+                    
+                    <div class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6 max-w-sm mx-auto">
+                        <h3 class="text-base sm:text-lg font-medium text-gray-800 mb-1 sm:mb-2">NISN:</h3>
+                        <div id="nisnDiterima" class="text-xl sm:text-2xl font-bold text-secondary"></div>
+                    </div>
+                    
+                    <div class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6 max-w-sm mx-auto">
+                        <h3 class="text-base sm:text-lg font-medium text-gray-800 mb-1 sm:mb-2">Nama:</h3>
+                        <div id="namaDiterima" class="text-xl sm:text-2xl font-bold text-secondary"></div>
+                    </div>
+                    
+                    <div class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6 max-w-sm mx-auto">
+                        <h3 class="text-base sm:text-lg font-medium text-gray-800 mb-1 sm:mb-2">Nomor Urut Penerimaan:</h3>
+                        <div id="noDiterima" class="text-xl sm:text-2xl font-bold text-secondary"></div>
+                    </div>
+
+                    <div class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6 max-w-sm mx-auto">
+                        <h3 class="text-base sm:text-lg font-medium text-gray-800 mb-1 sm:mb-2">Jalur Penerimaan:</h3>
+                        <div id="jalurPenerimaan" class="text-xl sm:text-2xl font-bold text-secondary"></div>
+                    </div>
+                    
+                    <div class="text-left mb-5 sm:mb-6">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">Langkah Selanjutnya:</h3>
+                        <ol class="list-decimal list-inside space-y-1 sm:space-y-2 text-sm sm:text-base text-gray-700">
+                            <li>Bergabung ke grup Calon Murid Baru di <a href="https://go.smage.my.id/grupwasapcmb25" target="_blank" class="text-secondary font-medium hover:underline">https://go.smage.my.id/grupwasapcmb25</a></li>
+                            <li>Tunjukkan <a id="cetakLink" href="#" class="text-secondary font-medium hover:underline" target="_blank">Halaman Buku Induk</a> kepada Verifikator Pendaftaran Ulang</li>
+                            <li>Menyerahkan fotokopi:
+                                <ul class="list-disc list-inside ml-3 sm:ml-5 mt-1">
+                                    <li>Bukti Pendaftaran dan Penerimaan</li>
+                                    <li>Buku Induk (yang dicetak)</li>
+                                    <li>Surat Pernyataan (saat hadir di sekolah)</li>
+                                    <li>Fotokopi KK atau surat keterangan domisili (2 lembar)</li>
+                                    <li>Persyaratan tambahan sesuai jalur <small class="mt-4 text-red-500 text-center">(*Lihat persyaratan pada map</small></li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+                        <a id="cetakBukuInduk" href="#" class="btn-secondary py-2 px-4 sm:px-6 rounded-lg font-medium text-center text-sm sm:text-base" target="_blank" >Cetak Daftar Buku Induk</a>
+                        <button id="logoutBtn" class="btn-logout py-2 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base">Keluar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="registrationForm" class="glass rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 hidden">
+                <div class="flex justify-between items-center mb-4 sm:mb-6">
+                    <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Formulir Pendaftaran Ulang</h2>
+                    <button id="logoutBtnForm" class="btn-logout py-2 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base">Keluar</button>
+                </div>
+                
+                <div id="studentInfo" class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                            <p class="text-xs sm:text-sm text-gray-600">Nama Lengkap</p>
+                            <p id="studentName" class="text-sm sm:text-base font-semibold"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm text-gray-600">Tanggal Lahir</p>
+                            <p id="studentBirthdate" class="text-sm sm:text-base font-semibold"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm text-gray-600">NISN</p>
+                            <p id="studentNisn" class="text-sm sm:text-base font-semibold"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm text-gray-600">Asal Sekolah</p>
+                            <p id="studentSchool" class="text-sm sm:text-base font-semibold"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm text-gray-600">Jalur Penerimaan</p>
+                            <p id="studentPath" class="text-sm sm:text-base font-semibold"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm text-gray-600">Nomor Penerimaan</p>
+                            <p id="studentAcceptNumber" class="text-sm sm:text-base font-semibold"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="registrationFormElement" method="POST" action="https://script.google.com/macros/s/AKfycbwCCvzIYxPHfDCgUyDbNtqmwuYeH1xNR4-NXqYdAMAQX9TZbrq6VWfR1PkPOJh2eqEX/exec" class="space-y-6 sm:space-y-8">
+                    <input type="hidden" id="form-nisn" name="nisn">
+                    <input type="hidden" id="form-jalur" name="jalur">
+                    <!-- Section A -->
+                    <div class="form-section">
+                        <h3 class="section-title text-base sm:text-lg font-semibold mb-3 sm:mb-4">A. Keterangan tentang Diri Peserta Didik</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            <div class="md:col-span-2">
+                                <label for="nama-lengkap" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                                <input type="text" id="nama-lengkap" name="nama-lengkap" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" readonly>
+                            </div>
+                            <div>
+                                <label for="nama-panggilan" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Nama Panggilan</label>
+                                <input type="text" id="nama-panggilan" name="nama-panggilan" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="jenis-kelamin" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
+                                <select id="jenis-kelamin" name="jenis-kelamin" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="tempat-lahir" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tempat Lahir</label>
+                                <input type="text" id="tempat-lahir" name="tempat-lahir" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="tanggal-lahir" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                                <input type="date" id="tanggal-lahir" name="tanggal-lahir" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="agama" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Agama</label>
+                                <select id="agama" name="agama" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="Islam">Islam</option>
+                                    <option value="Kristen">Kristen</option>
+                                    <option value="Katolik">Katolik</option>
+                                    <option value="Hindu">Hindu</option>
+                                    <option value="Buddha">Buddha</option>
+                                    <option value="Konghucu">Konghucu</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="kewarganegaraan" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Kewarganegaraan</label>
+                                <input type="text" id="kewarganegaraan" name="kewarganegaraan" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" value="WNI" required>
+                            </div>
+                            <div>
+                                <label for="nik" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Nomor Induk Kependudukan (NIK)</label>
+                                <input type="text" id="nik" name="nik" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" minlength="16" maxlength="16" required>
+                            </div>
+                            <div>
+                                <label for="anak-ke" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Anak Keberapa</label>
+                                <input type="number" id="anak-ke" name="anak-ke" min="1" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="jumlah-saudara" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Jumlah Saudara</label>
+                                <input type="number" id="jumlah-saudara" name="jumlah-saudara" min="0" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="saudara-kandung" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Saudara Kandung</label>
+                                <input type="number" id="saudara-kandung" name="saudara-kandung" min="0" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="saudara-tiri" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Saudara Tiri</label>
+                                <input type="number" id="saudara-tiri" name="saudara-tiri" min="0" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="saudara-angkat" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Saudara Angkat</label>
+                                <input type="number" id="saudara-angkat" name="saudara-angkat" min="0" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="status-yatim" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Status Yatim</label>
+                                <select id="status-yatim" name="status-yatim" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="Tidak">Tidak</option>
+                                    <option value="Yatim">Yatim</option>
+                                    <option value="Piatu">Piatu</option>
+                                    <option value="Yatim-Piatu">Yatim-Piatu</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="bahasa-sehari" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Bahasa Sehari-hari di Rumah</label>
+                                <input type="text" id="bahasa-sehari" name="bahasa-sehari" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section B -->
+                    <div class="form-section">
+                        <h3 class="section-title text-base sm:text-lg font-semibold mb-3 sm:mb-4">B. Keterangan Tempat Tinggal</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            <div class="md:col-span-2">
+                                <label for="alamat" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                                <textarea id="alamat" name="alamat" rows="3" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required></textarea>
+                            </div>
+                            <div>
+                                <label for="telepon" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Telepon/HP/WA</label>
+                                <input type="text" id="telepon" name="telepon" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email" name="email" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="tinggal-dengan" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tinggal dengan</label>
+                                <select id="tinggal-dengan" name="tinggal-dengan" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="Orang Tua">Orang Tua</option>
+                                    <option value="Saudara">Saudara</option>
+                                    <option value="Wali">Wali</option>
+                                    <option value="Kost">Kost</option>
+                                    <option value="Asrama">Asrama</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="jarak-sekolah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Jarak Tempat Tinggal ke Sekolah</label>
+                                <select id="jarak-sekolah" name="jarak-sekolah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="< 1 km">< 1 km</option>
+                                    <option value="1-3 km">1-3 km</option>
+                                    <option value="3-5 km">3-5 km</option>
+                                    <option value="5-10 km">5-10 km</option>
+                                    <option value="> 10 km">> 10 km</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="transportasi" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Transportasi ke Sekolah</label>
+                                <select id="transportasi" name="transportasi" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="Jalan Kaki">Jalan Kaki</option>
+                                    <option value="Sepeda">Sepeda</option>
+                                    <option value="Sepeda Motor">Sepeda Motor</option>
+                                    <option value="Mobil Pribadi">Mobil Pribadi</option>
+                                    <option value="Angkutan Umum">Angkutan Umum</option>
+                                    <option value="Ojek">Ojek</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section C -->
+                    <div class="form-section">
+                        <h3 class="section-title text-base sm:text-lg font-semibold mb-3 sm:mb-4">C. Keterangan Kesehatan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            <div>
+                                <label for="golongan-darah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Golongan Darah</label>
+                                <select id="golongan-darah" name="golongan-darah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="AB">AB</option>
+                                    <option value="O">O</option>
+                                    <option value="Tidak Tahu">Tidak Tahu</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="penyakit" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Penyakit yang Pernah Diderita (opsional)</label>
+                                <input type="text" id="penyakit" name="penyakit" placeholder="Contoh: TBC, Cacar, Malaria, dll." class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="kelainan-jasmani" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Kelainan Jasmani (opsional)</label>
+                                <input type="text" id="kelainan-jasmani" name="kelainan-jasmani" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="tinggi-badan" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tinggi Badan (cm)</label>
+                                <input type="number" id="tinggi-badan" name="tinggi-badan" min="100" max="250" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="berat-badan" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Berat Badan (kg)</label>
+                                <input type="number" id="berat-badan" name="berat-badan" min="20" max="150" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section D -->
+                    <div class="form-section">
+                        <h3 class="section-title text-base sm:text-lg font-semibold mb-3 sm:mb-4">D. Keterangan Pendidikan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            <div>
+                                <label for="asal-sekolah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Lulusan dari (Sekolah Sebelumnya)</label>
+                                <input type="text" id="asal-sekolah" name="asal-sekolah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" readonly>
+                            </div>
+                            <div>
+                                <label for="nomor-ijazah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tanggal dan Nomor Ijazah (opsional)</label>
+                                <input type="text" id="nomor-ijazah" name="nomor-ijazah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="lama-belajar" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Lama belajar (opsional)</label>
+                                <input type="text" id="lama-belajar" name="lama-belajar" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="kelas" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Di Kelas</label>
+                                <input type="text" id="kelas" name="kelas" value="X" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300 bg-gray-100" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section E -->
+                    <div class="form-section">
+                        <h3 class="section-title text-base sm:text-lg font-semibold mb-3 sm:mb-4">E. Keterangan tentang Ayah Kandung</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            <div>
+                                <label for="nama-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Nama</label>
+                                <input type="text" id="nama-ayah" name="nama-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="tempat-lahir-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tempat Lahir</label>
+                                <input type="text" id="tempat-lahir-ayah" name="tempat-lahir-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="tanggal-lahir-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                                <input type="date" id="tanggal-lahir-ayah" name="tanggal-lahir-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="agama-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Agama</label>
+                                <select id="agama-ayah" name="agama-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="Islam">Islam</option>
+                                    <option value="Kristen">Kristen</option>
+                                    <option value="Katolik">Katolik</option>
+                                    <option value="Hindu">Hindu</option>
+                                    <option value="Buddha">Buddha</option>
+                                    <option value="Konghucu">Konghucu</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="kewarganegaraan-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Kewarganegaraan</label>
+                                <input type="text" id="kewarganegaraan-ayah" name="kewarganegaraan-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" value="WNI">
+                            </div>
+                            <div>
+                                <label for="pendidikan-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Pendidikan</label>
+                                <select id="pendidikan-ayah" name="pendidikan-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="SD/Sederajat">SD/Sederajat</option>
+                                    <option value="SMP/Sederajat">SMP/Sederajat</option>
+                                    <option value="SMA/Sederajat">SMA/Sederajat</option>
+                                    <option value="D1">D1</option>
+                                    <option value="D2">D2</option>
+                                    <option value="D3">D3</option>
+                                    <option value="D4/S1">D4/S1</option>
+                                    <option value="S2">S2</option>
+                                    <option value="S3">S3</option>
+                                    <option value="Tidak Sekolah">Tidak Sekolah</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="pekerjaan-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Pekerjaan</label>
+                                <input type="text" id="pekerjaan-ayah" name="pekerjaan-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="penghasilan-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Penghasilan per bulan</label>
+                                <select id="penghasilan-ayah" name="penghasilan-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="< Rp 1.000.000">< Rp 1.000.000</option>
+                                    <option value="Rp 1.000.000 - Rp 3.000.000">Rp 1.000.000 - Rp 3.000.000</option>
+                                    <option value="Rp 3.000.000 - Rp 5.000.000">Rp 3.000.000 - Rp 5.000.000</option>
+                                    <option value="Rp 5.000.000 - Rp 10.000.000">Rp 5.000.000 - Rp 10.000.000</option>
+                                    <option value="> Rp 10.000.000">> Rp 10.000.000</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="email-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email-ayah" name="email-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="alamat-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Alamat Rumah</label>
+                                <textarea id="alamat-ayah" name="alamat-ayah" rows="2" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300"></textarea>
+                            </div>
+                            <div>
+                                <label for="telepon-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Telepon/HP/WA</label>
+                                <input type="text" id="telepon-ayah" name="telepon-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="status-ayah" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Status Hidup</label>
+                                <select id="status-ayah" name="status-ayah" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="Masih Hidup">Masih Hidup</option>
+                                    <option value="Meninggal Dunia">Meninggal Dunia</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section F -->
+                    <div class="form-section">
+                        <h3 class="section-title text-base sm:text-lg font-semibold mb-3 sm:mb-4">F. Keterangan tentang Ibu Kandung</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            <div>
+                                <label for="nama-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Nama</label>
+                                <input type="text" id="nama-ibu" name="nama-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                            </div>
+                            <div>
+                                <label for="tempat-lahir-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tempat Lahir</label>
+                                <input type="text" id="tempat-lahir-ibu" name="tempat-lahir-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="tanggal-lahir-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                                <input type="date" id="tanggal-lahir-ibu" name="tanggal-lahir-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="agama-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Agama</label>
+                                <select id="agama-ibu" name="agama-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="Islam">Islam</option>
+                                    <option value="Kristen">Kristen</option>
+                                    <option value="Katolik">Katolik</option>
+                                    <option value="Hindu">Hindu</option>
+                                    <option value="Buddha">Buddha</option>
+                                    <option value="Konghucu">Konghucu</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="kewarganegaraan-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Kewarganegaraan</label>
+                                <input type="text" id="kewarganegaraan-ibu" name="kewarganegaraan-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" value="WNI">
+                            </div>
+                            <div>
+                                <label for="pendidikan-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Pendidikan</label>
+                                <select id="pendidikan-ibu" name="pendidikan-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="SD/Sederajat">SD/Sederajat</option>
+                                    <option value="SMP/Sederajat">SMP/Sederajat</option>
+                                    <option value="SMA/Sederajat">SMA/Sederajat</option>
+                                    <option value="D1">D1</option>
+                                    <option value="D2">D2</option>
+                                    <option value="D3">D3</option>
+                                    <option value="D4/S1">D4/S1</option>
+                                    <option value="S2">S2</option>
+                                    <option value="S3">S3</option>
+                                    <option value="Tidak Sekolah">Tidak Sekolah</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="pekerjaan-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Pekerjaan</label>
+                                <input type="text" id="pekerjaan-ibu" name="pekerjaan-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="penghasilan-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Penghasilan per bulan</label>
+                                <select id="penghasilan-ibu" name="penghasilan-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="< Rp 1.000.000">< Rp 1.000.000</option>
+                                    <option value="Rp 1.000.000 - Rp 3.000.000">Rp 1.000.000 - Rp 3.000.000</option>
+                                    <option value="Rp 3.000.000 - Rp 5.000.000">Rp 3.000.000 - Rp 5.000.000</option>
+                                    <option value="Rp 5.000.000 - Rp 10.000.000">Rp 5.000.000 - Rp 10.000.000</option>
+                                    <option value="> Rp 10.000.000">> Rp 10.000.000</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="email-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email-ibu" name="email-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="alamat-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Alamat Rumah</label>
+                                <textarea id="alamat-ibu" name="alamat-ibu" rows="2" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300"></textarea>
+                            </div>
+                            <div>
+                                <label for="telepon-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Telepon/HP/WA</label>
+                                <input type="text" id="telepon-ibu" name="telepon-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="status-ibu" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Status Hidup</label>
+                                <select id="status-ibu" name="status-ibu" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300" required>
+                                    <option value="">Pilih</option>
+                                    <option value="Masih Hidup">Masih Hidup</option>
+                                    <option value="Meninggal Dunia">Meninggal Dunia</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section G -->
+                    <div class="form-section">
+                        <h3 class="section-title text-base sm:text-lg font-semibold mb-3 sm:mb-4">G. Keterangan Wali (**jika diperlukan)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            <div>
+                                <label for="nama-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Nama</label>
+                                <input type="text" id="nama-wali" name="nama-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="tempat-lahir-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tempat Lahir</label>
+                                <input type="text" id="tempat-lahir-wali" name="tempat-lahir-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="tanggal-lahir-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                                <input type="date" id="tanggal-lahir-wali" name="tanggal-lahir-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="agama-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Agama</label>
+                                <select id="agama-wali" name="agama-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="Islam">Islam</option>
+                                    <option value="Kristen">Kristen</option>
+                                    <option value="Katolik">Katolik</option>
+                                    <option value="Hindu">Hindu</option>
+                                    <option value="Buddha">Buddha</option>
+                                    <option value="Konghucu">Konghucu</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="kewarganegaraan-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Kewarganegaraan</label>
+                                <input type="text" id="kewarganegaraan-wali" name="kewarganegaraan-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="pendidikan-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Pendidikan</label>
+                                <select id="pendidikan-wali" name="pendidikan-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="SD/Sederajat">SD/Sederajat</option>
+                                    <option value="SMP/Sederajat">SMP/Sederajat</option>
+                                    <option value="SMA/Sederajat">SMA/Sederajat</option>
+                                    <option value="D1">D1</option>
+                                    <option value="D2">D2</option>
+                                    <option value="D3">D3</option>
+                                    <option value="D4/S1">D4/S1</option>
+                                    <option value="S2">S2</option>
+                                    <option value="S3">S3</option>
+                                    <option value="Tidak Sekolah">Tidak Sekolah</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="pekerjaan-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Pekerjaan</label>
+                                <input type="text" id="pekerjaan-wali" name="pekerjaan-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="penghasilan-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Penghasilan per bulan</label>
+                                <select id="penghasilan-wali" name="penghasilan-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="< Rp 1.000.000">< Rp 1.000.000</option>
+                                    <option value="Rp 1.000.000 - Rp 3.000.000">Rp 1.000.000 - Rp 3.000.000</option>
+                                    <option value="Rp 3.000.000 - Rp 5.000.000">Rp 3.000.000 - Rp 5.000.000</option>
+                                    <option value="Rp 5.000.000 - Rp 10.000.000">Rp 5.000.000 - Rp 10.000.000</option>
+                                    <option value="> Rp 10.000.000">> Rp 10.000.000</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="email-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email-wali" name="email-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="alamat-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Alamat Rumah</label>
+                                <textarea id="alamat-wali" name="alamat-wali" rows="2" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300"></textarea>
+                            </div>
+                            <div>
+                                <label for="telepon-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Telepon/HP/WA</label>
+                                <input type="text" id="telepon-wali" name="telepon-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="status-wali" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Status Hidup</label>
+                                <select id="status-wali" name="status-wali" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                                    <option value="">Pilih</option>
+                                    <option value="Masih Hidup">Masih Hidup</option>
+                                    <option value="Meninggal Dunia">Meninggal Dunia</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section H -->
+                    <div class="form-section">
+                        <h3 class="section-title text-base sm:text-lg font-semibold mb-3 sm:mb-4">H. Kegemaran Peserta Didik (opsional)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            <div>
+                                <label for="kesenian" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Kesenian</label>
+                                <input type="text" id="kesenian" name="kesenian" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="olahraga" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Olahraga</label>
+                                <input type="text" id="olahraga" name="olahraga" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="organisasi" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Kemasyarakatan/Organisasi</label>
+                                <input type="text" id="organisasi" name="organisasi" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                            <div>
+                                <label for="lain-lain" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Lain-lain</label>
+                                <input type="text" id="lain-lain" name="lain-lain" class="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300">
+                            </div>
+                        </div>
+                    </div>
+                  	
+                    <div class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg">
+                          <h4 class="font-bold mb-2 flex items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                              </svg>
+                              <strong>Penting!</strong>
+                          </h4>
+                          <p class="text-sm">Pastikan bahwa pengisian data buku induk sudah benar, karena proses ini hanya dapat dilakukan <strong>satu kali</strong> oleh Calon Murid Baru!</p>
+                     </div>
+                    
+                    <div class="flex justify-center mt-6 sm:mt-8">
+                        <button type="submit" id="submitBtn" class="btn-primary py-2 sm:py-3 px-6 sm:px-8 rounded-lg font-medium text-base sm:text-lg">Kirim Pendaftaran</button>
+                    </div>
+                </form>
+                
+                <div id="formSubmitStatus" class="mt-5 sm:mt-6 text-center hidden">
+                    <div id="formSubmitLoading" class="hidden">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                        <p class="text-sm sm:text-base">Mengirim data pendaftaran...</p>
+                    </div>
+                    <div id="formSubmitSuccess" class="hidden">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Pendaftaran Berhasil!</h3>
+                        <p class="text-sm sm:text-base text-gray-600 mb-4">Data Anda telah berhasil disimpan. Tunjukkan halaman ini kepada verifikator berkas.</p>
+                        
+                        <div class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6 max-w-sm mx-auto">
+                            <h3 class="text-base sm:text-lg font-medium text-gray-800 mb-1 sm:mb-2">NISN:</h3>
+                            <div id="nisnDiterimaSuccess" class="text-xl sm:text-2xl font-bold text-secondary"></div>
+                        </div>
+                        
+                        <div class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6 max-w-sm mx-auto">
+                            <h3 class="text-base sm:text-lg font-medium text-gray-800 mb-1 sm:mb-2">Nama:</h3>
+                            <div id="namaDiterimaSuccess" class="text-xl sm:text-2xl font-bold text-secondary"></div>
+                        </div>
+                        
+                        <div class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6 max-w-sm mx-auto">
+                            <h3 class="text-base sm:text-lg font-medium text-gray-800 mb-1 sm:mb-2">Nomor Urut Penerimaan:</h3>
+                            <div id="noDiterimaSuccess" class="text-xl sm:text-2xl font-bold text-secondary"></div>
+                        </div>
+
+                        <div class="glass-dark rounded-xl p-3 sm:p-4 mb-5 sm:mb-6 max-w-sm mx-auto">
+                            <h3 class="text-base sm:text-lg font-medium text-gray-800 mb-1 sm:mb-2">Jalur Penerimaan:</h3>
+                            <div id="jalurPenerimaanSuccess" class="text-xl sm:text-2xl font-bold text-secondary"></div>
+                        </div>
+                        
+                        <div class="text-left mb-5 sm:mb-6 max-w-md mx-auto">
+                            <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">Langkah Selanjutnya:</h3>
+                            <ol class="list-decimal list-inside space-y-1 sm:space-y-2 text-sm sm:text-base text-gray-700">
+                                <li>Bergabung ke grup Calon Murid Baru di <a href="https://go.smage.my.id/grupwasapcmb25" target="_blank" class="text-secondary font-medium hover:underline">https://go.smage.my.id/grupwasapcmb25</a></li>
+                                <li>Tunjukkan <a id="cetakLinkSuccess" href="#" class="text-secondary font-medium hover:underline">Halaman Buku Induk</a> kepada Verifikator Pendaftaran Ulang</li>
+                                <li>Menyerahkan fotokopi:
+                                    <ul class="list-disc list-inside ml-3 sm:ml-5 mt-1">
+                                        <li>Bukti Pendaftaran dan Penerimaan</li>
+                                        <li>Buku Induk (yang dicetak)</li>
+                                        <li>Surat Pernyataan (saat hadir di sekolah)</li>
+                                        <li>Fotokopi KK atau surat keterangan domisili (2 lembar)</li>
+                                        <li>Persyaratan tambahan sesuai jalur <small class="mt-4 text-red-500 text-center">(*Lihat persyaratan pada map</small></li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+                            <a id="cetakBukuIndukSuccess" href="#" class="btn-secondary py-2 px-4 sm:px-6 rounded-lg font-medium text-center text-sm sm:text-base" target="_blank">Cetak Daftar Buku Induk</a>
+                            <button id="logoutBtnSuccess" class="btn-logout py-2 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base">Keluar</button>
+                        </div>
+                    </div>
+                    <div id="formSubmitError" class="hidden">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Terjadi Kesalahan</h3>
+                        <p class="text-sm sm:text-base text-gray-600 mb-4">Gagal mengirim data pendaftaran. Silakan coba lagi.</p>
+                        <button id="retryBtn" class="btn-primary py-2 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base">Coba Lagi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // URLs for data
+        const studentDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4RHY5KBJx96yFVxPqZeHYFzxbiXwDpPqmKXq9_m7DVsiCwDjBSPEs2ob_70SYx4Lbn15TPpYfQaWN/pub?gid=0&single=true&output=csv';
+        const registrationDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1NZtGPjmUOp-UtskFjeH-mW8O_umoBN6RrVea4go3PPT8hTpFeOGZI7gHdN9x0eXoxaZqKyQcTCdG/pub?gid=0&single=true&output=csv';
+        
+        // Global variables
+        let studentData = [];
+        let registrationData = [];
+        let currentStudent = null;
+        
+        // Fetch student data
+        async function fetchStudentData() {
+            try {
+                const response = await fetch(studentDataUrl);
+                const csvData = await response.text();
+                
+                Papa.parse(csvData, {
+                    header: true,
+                    complete: function(results) {
+                        studentData = results.data.filter(row => row.nisn && row.nisn.trim() !== '');
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+            }
+        }
+        
+        // Fetch registration data
+        async function fetchRegistrationData() {
+            try {
+                const response = await fetch(registrationDataUrl);
+                const csvData = await response.text();
+                
+                Papa.parse(csvData, {
+                    header: true,
+                    complete: function(results) {
+                        registrationData = results.data.filter(row => row.nisn && row.nisn.trim() !== '');
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching registration data:', error);
+            }
+        }
+        
+        // Check if student is already registered
+        function isStudentRegistered(nisn) {
+            return registrationData.some(row => row.nisn === nisn);
+        }
+        
+        // Find student by NISN
+        function findStudentByNisn(nisn) {
+            return studentData.find(row => row.nisn === nisn);
+        }
+        
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nisn = document.getElementById('nisn').value.trim();
+            const birthdate = document.getElementById('birthdate').value;
+            
+            const student = findStudentByNisn(nisn);
+            
+            if (student) {
+                currentStudent = student;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('registrationSection').classList.remove('hidden');
+                
+                // Check if student is already registered
+                if (isStudentRegistered(nisn)) {
+                    showAlreadyRegistered();
+                } else {
+                    showRegistrationForm();
+                }
+            } else {
+                document.getElementById('loginError').textContent = 'NISN tidak ditemukan. Silakan periksa kembali.';
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        });
+        
+        // Show already registered section
+        function showAlreadyRegistered() {
+            document.getElementById('alreadyRegistered').classList.remove('hidden');
+            document.getElementById('registrationForm').classList.add('hidden');
+            document.getElementById('nisnDiterima').textContent = currentStudent.nisn;
+            document.getElementById('namaDiterima').textContent = currentStudent.nama;
+            document.getElementById('noDiterima').textContent = currentStudent['no-diterima'];
+            document.getElementById('jalurPenerimaan').textContent = currentStudent['jalur'];
+            document.getElementById('cetakLink').href = `./cetak/?nisn=${currentStudent.nisn}`;
+            document.getElementById('cetakBukuInduk').href = `./cetak/?nisn=${currentStudent.nisn}`;
+        }
+        
+        // Show registration form
+        function showRegistrationForm() {
+            document.getElementById('alreadyRegistered').classList.add('hidden');
+            document.getElementById('registrationForm').classList.remove('hidden');
+            
+            // Fill student info
+            document.getElementById('studentName').textContent = currentStudent.nama;
+            // Convert birthdate to the desired format
+            const birthdateValue = document.getElementById('birthdate').value; // yyyy-mm-dd
+            document.getElementById('studentBirthdate').textContent = formatDate(birthdateValue);
+            
+            document.getElementById('studentNisn').textContent = currentStudent.nisn;
+            document.getElementById('studentSchool').textContent = currentStudent['asal-smp'];
+            document.getElementById('studentPath').textContent = currentStudent.jalur;
+            document.getElementById('studentAcceptNumber').textContent = currentStudent['no-diterima'];
+            
+            // Fill form fields
+            document.getElementById('form-nisn').value = currentStudent.nisn;
+            document.getElementById('form-jalur').value = currentStudent.jalur;
+            document.getElementById('nama-lengkap').value = currentStudent.nama;
+            document.getElementById('asal-sekolah').value = currentStudent['asal-smp'];
+            document.getElementById('tanggal-lahir').value = document.getElementById('birthdate').value;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            
+            // Use the Indonesian locale for month formatting
+            return date.toLocaleDateString('id-ID', options);
+        }
+        
+        // Handle registration form submission
+        document.getElementById('registrationFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            document.getElementById('formSubmitStatus').classList.remove('hidden');
+            document.getElementById('formSubmitLoading').classList.remove('hidden');
+            document.getElementById('formSubmitSuccess').classList.add('hidden');
+            document.getElementById('formSubmitError').classList.add('hidden');
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('formSubmitLoading').classList.add('hidden');
+                
+                if (data.result === 'success') {
+                    // Hide the form completely
+                    document.getElementById('registrationFormElement').classList.add('hidden');
+                    
+                    document.getElementById('formSubmitSuccess').classList.remove('hidden');
+                    document.getElementById('nisnDiterimaSuccess').textContent = currentStudent.nisn;
+                    document.getElementById('namaDiterimaSuccess').textContent = currentStudent.nama;
+                    document.getElementById('noDiterimaSuccess').textContent = currentStudent['no-diterima'];
+                    document.getElementById('jalurPenerimaanSuccess').textContent = currentStudent['jalur'];
+                    document.getElementById('cetakLinkSuccess').href = `./cetak/?nisn=${currentStudent.nisn}`;
+                    document.getElementById('cetakBukuIndukSuccess').href = `./cetak/?nisn=${currentStudent.nisn}`;
+                    
+                    // Add student to registration data to prevent resubmission
+                    registrationData.push({ nisn: currentStudent.nisn });
+                } else {
+                    document.getElementById('formSubmitError').classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                document.getElementById('formSubmitLoading').classList.add('hidden');
+                document.getElementById('formSubmitError').classList.remove('hidden');
+            });
+        });
+        
+        // Handle retry button
+        document.getElementById('retryBtn').addEventListener('click', function() {
+            document.getElementById('formSubmitStatus').classList.add('hidden');
+        });
+        
+        // Handle logout buttons
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            resetForm();
+        });
+        
+        document.getElementById('logoutBtnForm').addEventListener('click', function() {
+            resetForm();
+        });
+        
+        document.getElementById('logoutBtnSuccess').addEventListener('click', function() {
+            resetForm();
+        });
+        
+        // Reset form and go back to login
+        function resetForm() {
+            document.getElementById('loginForm').reset();
+            document.getElementById('loginError').classList.add('hidden');
+            document.getElementById('registrationSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            currentStudent = null;
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            await fetchStudentData();
+            await fetchRegistrationData();
+        });
+      
+      	// Max Input Date
+        // Mendapatkan tanggal saat ini
+          const today = new Date();
+          const dd = String(today.getDate()).padStart(2, '0');
+          const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+          const yyyy = today.getFullYear();
+
+          // Format tanggal ke dalam format YYYY-MM-DD
+          const maxDate = `${yyyy}-${mm}-${dd}`;
+
+          // Mencari semua input tipe date dan mengatur atribut max ke maxDate
+          const dateInputs = document.querySelectorAll('input[type="date"]');
+          dateInputs.forEach(input => {
+              input.setAttribute('max', maxDate);
+          });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9514049667367a7a',t:'MTc1MDE3ODczMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

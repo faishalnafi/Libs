@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Buku Induk Siswa</title>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Aturan margin untuk semua halaman */
+        @media print {
+            @page {
+                margin: 2cm 1.75cm 2.55cm 2.75cm; /* semua margin diatur 1.75 cm */
+            }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header .logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .header-text {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .header-text p {
+            margin: 0;
+        }
+
+        .header-text h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .header-text small {
+            display: block;
+            font-size: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 5px;
+        }
+
+        .data-table td {
+            padding: 5px;
+            vertical-align: top; /* Memastikan semua elemen sel berada di atas */
+        }
+
+        .data-table td:first-child {
+            width: 50%;
+            padding-left: 1.5em; /* Label form agak menjorok */
+            text-align: left; /* Aligned to left */
+        }
+
+        .data-table td:last-child {
+            width: 50%;
+            border-bottom: 1px dotted black;
+            text-transform: uppercase;
+            padding-left: 1.5em; /* Sub-label form lebih menjorok */
+            text-align: left; /* Aligned to left */
+        }
+      	
+      	.data-table td {
+            word-wrap: break-word; /* Force long words onto the next line */
+        }
+
+        .data-table .sub-judul {
+            padding-left: 3em !important; /* Memastikan indentasi diterapkan */
+            text-align: left !important; /* Memastikan penataan tetap terjaga */
+        }
+
+        .section-title {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature-block {
+            text-align: center;
+            width: 40%;
+        }
+
+        .signature-line {
+            border-top: 1px solid black;
+            margin-top: 100px;
+        }
+
+        #search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #search-container input {
+            padding: 5px;
+            width: 200px;
+        }
+
+        #search-container button {
+            padding: 5px 10px;
+        }
+
+        #cetak-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            #search-container {
+                display: none;
+            }
+            #cetak-button {
+                display: none;
+            }
+        }
+      
+        #page,
+        #page * {
+          page-break-inside: avoid;
+          visibility: visible;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input type="hidden" id="nisnInput" placeholder="Masukkan NISN">
+    </div>
+
+    <div id="buku-induk" style="display:none;">
+        <div class='header'>  
+          <div>  
+              <img src='https://spmbjatim.net/images/logo.png' class='logo' />  
+          </div>  
+          <div class='header-text'>
+              <p><strong>PEMERINTAH PROVINSI JAWA TIMUR</strong></p>
+              <p><strong>DINAS PENDIDIKAN</strong></p>
+              <p><strong>CABANG DINAS PENDIDIKAN</strong></p>
+              <p><strong>WILAYAH KABUPATEN DAN KOTA MOJOKERTO</strong></p>
+              <small>Jalan Hayam Wuruk Nomor 66 Kecamatan Magersari Mojokerto Jawa Timur 61318 <br>Telepon (0321) 5282228, pos-el cabdindikwilmojokerto@yahoo.com</small>
+          </div>  
+      </div>
+
+        <div class="container">
+            <div class="title">
+                <b>DATA BUKU INDUK<br>
+                PESERTA DIDIK KELAS X<br>
+                TAHUN PELAJARAN 2025 / 2026</b>
+            </div>
+
+            <table class="data-table">
+                <tr>
+                    <td style="width: 60%;">Nomor Induk Siswa Nasional (NISN)</td>
+                    <td style="width: 40%;"id="nisn"></td>
+                </tr>
+                <tr>
+                    <td style="width: 60%;">Nomor Induk Kependudukan (NIK)</td>
+                    <td style="width: 40%;"id="nik"></td>
+                </tr>
+            </table>
+
+            <div id="section-container"></div>
+
+            <div class="signature-section">
+                <div class="signature-block">
+                    Mengetahui,<br> Orang Tua / Wali
+                  <p height="25px"></p>
+                    <div class="signature-line"></div>
+                </div>
+                <div class="signature-block">
+                    Mojokerto, .................. 2025<br>
+                    Peserta Didik
+                  <p height="25px"></p>
+                    <div class="signature-line"></div>
+                </div>
+            </div>
+
+            <button id="cetak-button" onclick="window.print()">Cetak Buku Induk</button>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // URL spreadsheet CSV
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1NZtGPjmUOp-UtskFjeH-mW8O_umoBN6RrVea4go3PPT8hTpFeOGZI7gHdN9x0eXoxaZqKyQcTCdG/pub?gid=0&single=true&output=csv';
+
+        // Nama bulan untuk pemformatan tanggal
+        const MONTHS = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+
+        // Definisi section berdasarkan template
+        const SECTIONS = [
+            {
+                title: 'A. Keterangan tentang Diri Peserta Didik',
+                fields: [
+                    { label: '1. Nama Peserta Didik', type: 'header' },
+                    { label: 'a. Nama Lengkap', id: 'nama-lengkap', class: 'sub-judul' },
+                    { label: 'b. Nama Panggilan', id: 'nama-panggilan', class: 'sub-judul' },
+                    { label: '2. Jenis Kelamin', id: 'jenis-kelamin' },
+                    { label: '3. Tempat dan Tanggal Lahir', id: 'tempat-tanggal-lahir' },
+                    { label: '4. Agama', id: 'agama' },
+                    { label: '5. Kewarganegaraan', id: 'kewarganegaraan' },
+                    { label: '6. Anak Ke berapa', id: 'anak-ke' },
+                    { label: '7. Jumlah Saudara Kandung', id: 'jumlah-saudara' },
+                    { label: '8. Jumlah Saudara Tiri', id: 'saudara-tiri' },
+                    { label: '9. Jumlah Saudara Angka', id: 'saudara-angkat' },
+                    { label: '10. Anak Yatim / Piatu / Yatim-Piatu', id: 'status-yatim' },
+                    { label: '11. Bahasa Sehari-hari di Rumah', id: 'bahasa-sehari' }
+                ]
+            },
+            {
+                title: 'B. Keterangan Tempat Tinggal',
+                fields: [
+                    { label: '12. Alamat', id: 'alamat' },
+                    { label: '13. Nomor', type: 'header' },
+                    { label: 'a. Telepon / Hp / Wa', id: 'telepon', class: 'sub-judul' },
+                    { label: 'b. Email', id: 'email', class: 'sub-judul' },
+                    { label: '14. Tinggal dengan Orang Tua/Saudara', id: 'tinggal-dengan' },
+                    { label: '15. Jarak Tempat Tinggal ke Sekolah', id: 'jarak-sekolah' },
+                    { label: '16. Transportasi ke Sekolah', id: 'transportasi' }
+                ]
+            },
+            {
+                title: 'C. Keterangan Sehat',
+                fields: [
+                    { label: '17. Golongan Darah', id: 'golongan-darah' },
+                    { label: '18. Penyakit yang pernah diderita:', id: 'penyakit' },
+                    { label: '19. Kelainan Jasmani', id: 'kelainan-jasmani' },
+                    { label: '20. Tinggi Badan dan Berat Badan:', id: 'tinggi-badan' }
+                ]
+            },
+            {
+                title: 'D. Keterangan Pendidikan',
+                fields: [
+                    { label: '21. Pendidikan yang Sebelumnya:', type: 'header' },
+                    { label: 'a. Lulusan dari', id: 'asal-sekolah', class: 'sub-judul' },
+                    { label: 'b. Tanggal dan Nomor Ijazah', id: 'nomor-ijazah', class: 'sub-judul' },
+                    { label: 'c. Lama Belajar', id: 'lama-belajar', class: 'sub-judul' },
+                    { label: '22. Pindahan', type: 'header' },
+                    { label: 'a. Dari Sekolah', id: 'pindahan-sekolah', class: 'sub-judul' },
+                    { label: 'b. Alasan', id: 'alasan-pindahan', class: 'sub-judul' },
+                    { label: '23. Diterima di Sekolah', type: 'header' },
+                    { label: 'a. Di Kelas', id: 'kelas', class: 'sub-judul' }
+                ]
+            },
+            {
+                title: 'E. Keterangan tentang Ayah Kandung',
+                fields: [
+                    { label: '24. Nama', id: 'nama-ayah' },
+                    { label: '25. Tempat dan Tanggal Lahir', id: 'tempat-lahir-ayah'},
+                    { label: '26. Agama', id: 'agama-ayah' },
+                    { label: '27. Kewarganegaraan', id: 'kewarganegaraan-ayah' },
+                    { label: '28. Pendidikan', id: 'pendidikan-ayah' },
+                    { label: '29. Pekerjaan', id: 'pekerjaan-ayah' },
+                    { label: '30. Penghasilan perbulan', id: 'penghasilan-ayah' },
+                    { label: '31. Alamat Rumah', id: 'alamat-ayah' },
+                    { label: '32. Nomor', type: 'header' },
+                    { label: 'a. Telepon / HP / WA', id: 'telepon-ayah', class: 'sub-judul' },
+                    { label: 'b. Email', id: 'email-ayah', class: 'sub-judul' },
+                    { label: '33. Masih Hidup / Meninggal Dunia:', id: 'status-ayah' }
+                ]
+            },
+            {
+                title: 'F. Keterangan tentang Ibu Kandung',
+                fields: [
+                    { label: '34. Nama', id: 'nama-ibu' },
+                    { label: '35. Tempat dan Tanggal Lahir', id: 'tempat-lahir-ibu' },
+                    { label: '36. Agama', id: 'agama-ibu' },
+                    { label: '37. Kewarganegaraan', id: 'kewarganegaraan-ibu' },
+                    { label: '38. Pendidikan', id: 'pendidikan-ibu' },
+                    { label: '39. Pekerjaan', id: 'pekerjaan-ibu' },
+                    { label: '40. Penghasilan perbulan', id: 'penghasilan-ibu' },
+                    { label: '41. Alamat Rumah', id: 'alamat-ibu' },
+                    { label: '42. Nomor', type: 'header' },
+                    { label: 'a. Telepon / HP / WA', id: 'telepon-ibu', class: 'sub-judul' },
+                    { label: 'b. Email', id: 'email-ibu', class: 'sub-judul' },
+                    { label: '43. Masih Hidup / Meninggal Dunia', id: 'status-ibu' }
+                ]
+            },
+            {
+                title: 'G. Keterangan Wali',
+                fields: [
+                    { label: '44. Nama', id: 'nama-wali' },
+                    { label: '45. Tempat dan Tanggal Lahir', id: 'tempat-lahir-wali' },
+                    { label: '46. Agama', id: 'agama-wali' },
+                    { label: '47. Kewarganegaraan', id: 'kewarganegaraan-wali' },
+                    { label: '48. Pendidikan', id: 'pendidikan-wali' },
+                    { label: '49. Pekerjaan', id: 'pekerjaan-wali' },
+                    { label: '50. Penghasilan perbulan', id: 'penghasilan-wali' },
+                    { label: '51. Alamat Rumah', id: 'alamat-wali' },
+                    { label: '52. Nomor', type: 'header' },
+                    { label: 'a. Telepon / HP / WA', id: 'telepon-wali', class: 'sub-judul' },
+                    { label: 'b. Email', id: 'email-wali', class: 'sub-judul' },
+                    { label: '53. Masih Hidup / Meninggal Dunia', id: 'status-wali' }
+                ]
+            },
+            {
+                title: 'H. Kegemaran Peserta Didik',
+                fields: [
+                    { label: 'a. Kesenian', id: 'kesenian' },
+                    { label: 'b. Olahraga', id: 'olahraga' },
+                    { label: 'c. Kemasyarakatan / Organisasi', id: 'organisasi' },
+                    { label: 'd. Lain-lain', id: 'lain-lain' }
+                ]
+            }
+        ];
+
+        function sanitize(text) {
+            return text ? String(text).trim().toUpperCase() : '';
+        }
+
+        function formatDate(dateString) {
+            const [year, month, day] = dateString.split("-");
+            const monthIndex = parseInt(month, 10) - 1; // Convert to zero-based index
+            const monthName = MONTHS[monthIndex];
+            return `${day} ${monthName} ${year}`;
+        }
+
+        function renderSections(siswa) {
+            const container = document.getElementById('section-container');
+            container.innerHTML = ''; // Bersihkan kontainer
+
+            SECTIONS.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                const sectionTitle = document.createElement('div');
+                sectionTitle.className = 'section-title';
+                sectionTitle.textContent = section.title;
+                sectionDiv.appendChild(sectionTitle);
+
+                const table = document.createElement('table');
+                table.className = 'data-table';
+
+                section.fields.forEach(field => {
+                    const tr = document.createElement('tr');
+                    const tdLabel = document.createElement('td');
+                    
+                    if (field.type === 'header') {
+                        tdLabel.textContent = field.label;
+                        tr.appendChild(tdLabel);
+                        
+                        const tdValue = document.createElement('td');
+                        tr.appendChild(tdValue);
+                    } else {
+                        tdLabel.textContent = field.label.replace(/\.\.\.\s*$/, ''); // Menghapus titik-titik
+                        if (field.class) {
+                            tdLabel.className = field.class;
+                        }
+                        tr.appendChild(tdLabel);
+
+                        const tdValue = document.createElement('td');
+                        tdValue.id = field.id;
+
+                        // Handling special cases for combined fields
+                        if (field.id === 'tempat-tanggal-lahir') {
+                            const tempat = sanitize(siswa['tempat-lahir']) || ' - ';
+                            const tanggal = siswa['tanggal-lahir'] ? formatDate(siswa['tanggal-lahir']) : ' - '; // Cek jika tanggal lahir ada
+                            tdValue.textContent = `${tempat}, ${tanggal}`;
+                        } else if (field.id === 'tempat-lahir-ayah' || field.id === 'tanggal-lahir-ayah') {
+                            const tempatAyah = sanitize(siswa['tempat-lahir-ayah']) || ' - ';
+                            const tanggalAyah = siswa['tanggal-lahir-ayah'] ? formatDate(siswa['tanggal-lahir-ayah']) : ' - '; // Cek jika tanggal lahir ayah ada
+                            tdValue.textContent = `${tempatAyah}, ${tanggalAyah}`;
+                        } else if (field.id === 'tempat-lahir-ibu' || field.id === 'tanggal-lahir-ibu') {
+                            const tempatIbu = sanitize(siswa['tempat-lahir-ibu']) || ' - ';
+                            const tanggalIbu = siswa['tanggal-lahir-ibu'] ? formatDate(siswa['tanggal-lahir-ibu']) : ' - '; // Cek jika tanggal lahir ibu ada
+                            tdValue.textContent = `${tempatIbu}, ${tanggalIbu}`;
+                        } else if (field.id === 'tempat-lahir-wali' || field.id === 'tanggal-lahir-wali') {
+                            const tempatWali = sanitize(siswa['tempat-lahir-wali']) || ' - ';
+                            const tanggalWali = siswa['tanggal-lahir-wali'] ? formatDate(siswa['tanggal-lahir-wali']) : ' - '; // Cek jika tanggal lahir wali ada
+                            tdValue.textContent = `${tempatWali}, ${tanggalWali}`;
+                        } else if (field.id === 'tinggi-badan') {
+                            const tinggiBadan = sanitize(siswa['tinggi-badan']) || ' - ';
+                            const beratBadan = sanitize(siswa['berat-badan']) || ' - ';
+                            tdValue.textContent = `${tinggiBadan} cm / ${beratBadan} kg`; // Gabungkan tinggi dan berat
+                        } else {
+                            // Cek untuk id lainnya, dan tampilkan nilai dengan sanitasi
+                            tdValue.textContent = sanitize(siswa[field.id]) || ' - '; // Ganti undefined dengan '-'
+                        }
+
+                        tr.appendChild(tdValue);
+                    }
+
+                    table.appendChild(tr);
+                });
+
+                sectionDiv.appendChild(table);
+                container.appendChild(sectionDiv);
+            });
+        }
+
+        let lastFetchedData = null; // 1. Tambahkan variabel untuk menyimpan data terakhir
+
+        function cariSiswa(nisnParam = null) {
+            const nisn = nisnParam || document.getElementById('nisnInput').value.trim();
+        
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    const siswa = results.data.find(s => sanitize(s.nisn) === sanitize(nisn));
+        
+                    if (!siswa) {
+                        alert('Buku Induk dicetak oleh Verifikator Berkas Daftar Ulang!');
+                        return;
+                    }
+        
+                    // 2. Cek apakah data baru
+                    if (JSON.stringify(siswa) !== JSON.stringify(lastFetchedData)) {
+                        lastFetchedData = siswa; // Simpan data yang baru
+                        document.getElementById('buku-induk').style.display = 'block';
+                        
+                        // Set NISN dan NIK
+                        document.getElementById('nisn').textContent = sanitize(siswa.nisn);
+                        document.getElementById('nik').textContent = sanitize(siswa.nik);
+                      
+                        // Mengatur judul halaman
+                        document.title = `Buku Induk Murid Baru - ${siswa.nisn} - ${siswa['nama-lengkap']}`;
+        
+                        // Render sections
+                        renderSections(siswa);
+                        
+                        // Otomatis cetak setelah data ditampilkan
+                        window.print();
+                      
+                        // Menunggu dialog print ditutup dan kemudian menutup tab
+                        setTimeout(function() {
+                            window.close(); // Menutup tab setelah dialog print ditutup
+                        }, 300);
+                    } else {
+                       alert('Data tidak berubah.'); // Informasikan jika data tidak berubah
+                    }                    
+                },
+                error: function(error) {
+                    console.error('Error parsing CSV:', error);
+                    alert('Gagal memuat data. Periksa koneksi internet.');
+                }
+            });
+        }
+        
+        // 3. Fungsi baru untuk me-refresh data
+        function refreshData() {
+            cariSiswa(); // Mengulangi pencarian siswa berdasarkan NISN
+        }
+        
+        // 4. Tambahkan setInterval di akhir skrip
+        setInterval(refreshData, 60000); // Refresh data setiap 60 detik
+
+        // Cek NISN dari URL saat halaman dimuat
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nisnFromUrl = urlParams.get('nisn');
+
+            if (nisnFromUrl) {
+                document.getElementById('nisnInput').value = nisnFromUrl;
+                cariSiswa(nisnFromUrl);
+            }
+        };
+    </script>
+</body>
+</html>

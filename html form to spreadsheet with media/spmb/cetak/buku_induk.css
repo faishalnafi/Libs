@@ -1,0 +1,64 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    font-size: 12px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.kop-surat {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+}
+
+.kop-line1 { font-size: 14px; font-weight: bold; }
+.kop-line2 { font-size: 14px; font-weight: bold; }
+.kop-line3 { font-size: 14px; font-weight: bold; }
+.kop-line4 { font-size: 14px; font-weight: bold; }
+.kop-line5 { font-size: 12px; }
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-decoration: underline;
+}
+
+.section-title {
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.label {
+    font-weight: bold;
+    border: 1px solid black;
+    padding: 5px;
+    vertical-align: top;
+}
+
+.value {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+}

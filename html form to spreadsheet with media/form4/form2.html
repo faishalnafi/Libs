@@ -80,23 +80,32 @@
             <div class="row mt-2">
               <div class="col-md-6">
                 <label class="form-label">Nama Lengkap</label>
-                <input type="text" id="nama" name="nama" class="form-control" readonly />
+                <input type="text" id="nama" name="nama" class="form-control" required />
               </div>
               <div class="col-md-6">
                 <label class="form-label">NISN</label>
-                <input type="text" id="nisn" name="nisn" class="form-control" readonly />
+                <input type="text" id="nisn" name="nisn" class="form-control" required />
               </div>
             </div>
             <div class="row mt-2">
               <div class="col-md-6">
                 <label class="form-label">Tanggal Lahir</label>
-                <input type="date" id="tgl-lahir" name="tgl-lahir" class="form-control" readonly />
+                <input type="date" id="tgl-lahir" name="tgl-lahir" class="form-control" required />
               </div>
               <div class="col-md-6">
-                <!-- !!! Kolom ini diganti menjadi No WhatsApp -->
                 <label class="form-label">Nomor WhatsApp</label>
                 <input type="tel" id="wa" name="wa" class="form-control" placeholder="08xxxxxxxxxx" required />
               </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <label class="form-label">Asal SMP</label>
+                    <input type="text" id="smp" name="smp" class="form-control" placeholder="Contoh: SMP Negeri 1" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Jalur</label>
+                    <input type="text" id="jalur" name="smp" class="form-control" placeholder="Contoh: Afirmasi" required />
+                </div>
             </div>
           </div>
 
@@ -211,8 +220,12 @@
 
         const results = await Promise.all(readerPromises);
         const formData = new FormData();
-        formData.append("name", document.getElementById("nama").value);
+        formData.append("nama", document.getElementById("nama").value);
+        formData.append("nisn", document.getElementById("nisn").value);
+        formData.append("tgl-lahir", document.getElementById("tgl-lahir").value);
         formData.append("wa", document.getElementById("wa").value);
+        formData.append("smp", document.getElementById("smp").value);
+        formData.append("jalur", document.getElementById("jalur").value);
 
         results.forEach(({ key, value }) => {
           formData.append(key, value);

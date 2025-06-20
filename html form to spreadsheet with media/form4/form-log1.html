@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Pendaftaran Ulang</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0e7ff, #fef9ff);
+      min-height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .glass-box {
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      margin: 50px auto;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loginSection" class="glass-box">
+  <h4 class="text-center mb-4">Login Pendaftaran Ulang</h4>
+  <form id="loginForm">
+    <div class="form-group">
+      <label for="nisn">Masukkan NISN</label>
+      <input type="text" id="nisnInput" class="form-control" placeholder="Contoh: 1234567890" required/>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Login</button>
+    <div id="loginError" class="text-danger mt-2 hidden">NISN tidak ditemukan.</div>
+  </form>
+</div>
+
+<!-- Kontainer Utama Setelah Login -->
+<div id="mainContent" class="container hidden">
+  <!-- Jika Sudah Mengisi -->
+  <div id="formFilled" class="glass-box hidden">
+    <h5 class="mb-3">Data Anda Telah Terdaftar</h5>
+    <ul class="list-group mb-3">
+      <li class="list-group-item"><strong>NISN:</strong> <span id="showNisn"></span></li>
+      <li class="list-group-item"><strong>Nama:</strong> <span id="showNama"></span></li>
+      <li class="list-group-item"><strong>Asal SMP:</strong> <span id="showSmp"></span></li>
+      <li class="list-group-item"><strong>Jalur:</strong> <span id="showJalur"></span></li>
+    </ul>
+    <div class="alert alert-info">
+      Jika terdapat kesalahan data atau dokumen, panitia akan menghubungi Anda. Untuk pertanyaan lebih lanjut, silakan datang ke sekolah.
+    </div>
+    <button class="btn btn-secondary btn-block" onclick="resetLogin()">Keluar</button>
+  </div>
+
+  <!-- Jika Belum Mengisi -->
+  <div id="formContainer" class="hidden">
+    <!-- Salin form pengisian dokumen Anda 100% dari file sebelumnya dan letakkan di sini -->
+    <!-- PASTIKAN semua ID dan struktur tetap sama -->
+    <!-- Untuk contoh, saya hanya berikan placeholder di bawah ini -->
+    <div class="glass-box">
+      <!-- !!! Salin form HTML Anda yang asli mulai dari sini -->
+      <!-- !!! Gantilah bagian ini dengan form lengkap yang Anda miliki -->
+      <form id="upload-form">[FORMULIR ANDA DI SINI]</form>
+      <!-- !!! Salin form HTML Anda yang asli sampai sini -->
+      <button class="btn btn-secondary btn-block mt-3" onclick="resetLogin()">Keluar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const siswaUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTyhcalvOtHzfw0-FneOSm20A2A7lLjt7QjRzSuHKwbFA1Bc-x9g_BR_sOgG0VmuvIMt9LBmTf0nOgp/pub?gid=177139897&single=true&output=csv';
+  const hasilUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTyhcalvOtHzfw0-FneOSm20A2A7lLjt7QjRzSuHKwbFA1Bc-x9g_BR_sOgG0VmuvIMt9LBmTf0nOgp/pub?gid=842064676&single=true&output=csv';
+
+  let siswaData = [], hasilData = [];
+
+  async function fetchCSV(url) {
+    const res = await fetch(url);
+    const text = await res.text();
+    return new Promise(resolve => {
+      Papa.parse(text, {
+        header: true,
+        complete: results => resolve(results.data)
+      });
+    });
+  }
+
+  async function fetchAllData() {
+    [siswaData, hasilData] = await Promise.all([fetchCSV(siswaUrl), fetchCSV(hasilUrl)]);
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const nisn = document.getElementById('nisnInput').value.trim();
+    if (!nisn) return;
+
+    await fetchAllData();
+    const siswa = siswaData.find(row => row.nisn === nisn);
+
+    if (!siswa) {
+      document.getElementById('loginError').classList.remove('hidden');
+      return;
+    }
+
+    document.getElementById('loginSection').classList.add('hidden');
+    document.getElementById('mainContent').classList.remove('hidden');
+
+    document.getElementById('showNisn').textContent = siswa.nisn;
+    document.getElementById('showNama').textContent = siswa.nama;
+    document.getElementById('showSmp').textContent = siswa['asal-smp'];
+    document.getElementById('showJalur').textContent = siswa.jalur;
+
+    const sudahIsi = hasilData.some(row => row.nisn === nisn);
+    if (sudahIsi) {
+      document.getElementById('formFilled').classList.remove('hidden');
+    } else {
+      document.getElementById('formContainer').classList.remove('hidden');
+    }
+  });
+
+  function resetLogin() {
+    document.getElementById('loginForm').reset();
+    document.getElementById('loginError').classList.add('hidden');
+    document.getElementById('mainContent').classList.add('hidden');
+    document.getElementById('loginSection').classList.remove('hidden');
+    document.getElementById('formFilled').classList.add('hidden');
+    document.getElementById('formContainer').classList.add('hidden');
+  }
+</script>
+
+</body>
+</html>
