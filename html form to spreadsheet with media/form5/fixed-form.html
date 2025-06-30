@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pendaftaran Ulang - SMA Negeri 3 Kota Mojokerto</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body { background: #f3f6fd; }
+    .glass-card { background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); margin: 50px auto; max-width: 800px; }
+    .section-title { font-weight: bold; font-size: 1.5rem; }
+    .form-label { font-weight: 500; }
+    .file-info { font-size: 0.875rem; color: #666; }
+    .bg-header { background: #e4e7fb; padding: 10px 20px; border-radius: 12px; margin-bottom: 30px; }
+    .bg-purple { color: #6f42c1; font-weight: bold; }
+    #login-box { max-width: 400px; margin: 80px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <div class="container" id="login-section">
+    <div id="login-box">
+      <h4 class="text-center mb-3">Login Pendaftaran Ulang</h4>
+      <p class="text-center mb-3">Sistem Penerimaan Siswa Baru SMA Negeri 3 Kota Mojokerto</p>
+      <p class="text-center mb-3">Untuk tutorial lebih lanjut dapat mengunjugi laman resmi kami <a href="https://li.diurnal.my.id/spmb2025" target="_blank">Tutorial Pendaftaran</a>.</p>
+      <input type="text" id="login-nisn" class="form-control mb-2" placeholder="Masukkan NISN" />
+      <button id="login-btn" class="btn btn-primary btn-block" onclick="handleLogin()">Login</button>
+    </div>
+  </div>
+
+  <div class="container" id="main-section" style="display:none">
+    <div class="glass-card">
+      <div class="d-flex justify-content-between align-items-center bg-header">
+        <div>
+          <h4 class="mb-1">Pendaftaran Ulang</h4>
+          <small id="greeting"></small>
+        </div>
+        <div class="text-right">
+          <div id="jalur" class="bg-purple"></div>
+          <a href="#" class="d-block text-danger text-sm" onclick="logout()">Keluar</a>
+        </div>
+      </div>
+      <div id="form-container">
+        <form id="upload-form" style="display:none">
+          <div class="mb-4">
+            <div class="section-title">Data Diri</div>
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <label class="form-label">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" class="form-control" readonly />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">NISN</label>
+                <input type="text" id="nisn" name="nisn" class="form-control" readonly />
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <label class="form-label">Tanggal Lahir</label>
+                <input type="date" id="tgl-lahir" name="tgl-lahir" class="form-control" readonly />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Nomor WhatsApp</label>
+                <input type="tel" id="wa" name="wa" class="form-control" placeholder="08xxxxxxxxxx" required />
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <label class="form-label">Asal Sekolah</label>
+                <input type="text" id="smp" name="smp" class="form-control" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Jalur</label>
+                <input type="text" id="jalurs" name="jalurs" class="form-control" readonly />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="section-title">Upload Dokumen (PDF maksimal 1MB)</div>
+            <div class="form-group mt-3">
+              <label class="form-label">Dokumen KK</label>
+              <input type="file" name="kk" id="kk" class="form-control-file" accept=".pdf" required />
+              <div id="kk-info" class="file-info"></div>
+            </div>
+            <div class="form-group mt-2">
+              <label class="form-label">Akta Kelahiran</label>
+              <input type="file" name="akta" id="akta" class="form-control-file" accept=".pdf" required />
+              <div id="akta-info" class="file-info"></div>
+            </div>
+            <div class="form-group mt-2">
+              <label class="form-label">Nilai Rapor (semester 1-5)</label>
+              <input type="file" name="rapor" id="rapor" class="form-control-file" accept=".pdf" required />
+              <div id="rapor-info" class="file-info"></div>
+            </div>
+            <div class="form-group mt-2">
+              <label class="form-label">Pas Foto 4x3 (jpg/png maks 1000KB)</label>
+              <input type="file" name="foto" id="foto" class="form-control-file" accept=".jpg,.jpeg,.png" required />
+              <div id="foto-info" class="file-info"></div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Kirim Pendaftaran</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const MASTER_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTyhcalvOtHzfw0-FneOSm20A2A7lLjt7QjRzSuHKwbFA1Bc-x9g_BR_sOgG0VmuvIMt9LBmTf0nOgp/pub?gid=177139897&single=true&output=csv';
+    const FILLED_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTyhcalvOtHzfw0-FneOSm20A2A7lLjt7QjRzSuHKwbFA1Bc-x9g_BR_sOgG0VmuvIMt9LBmTf0nOgp/pub?gid=842064676&single=true&output=csv';
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzf5UGKU1ewatuDNZ02p__cQ0X4euTwXtA5amxJvhv_OKGKWkQ6BPGuErfLzA61AFynFQ/exec";
+    const sessionKey = 'loginData';
+
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 11) return 'Selamat pagi';
+      else if (hour < 15) return 'Selamat siang';
+      else if (hour < 19 ) return 'Selamat sore';
+      else return 'Selamat malam';
+    }
+
+    function handleLogin() {
+      const nisnInput = document.getElementById('login-nisn');
+      const loginBtn = document.getElementById('login-btn');
+      const nisn = nisnInput.value.trim();
+
+      if (!nisn) {
+        return Swal.fire({ icon: 'error', title: 'NISN Kosong', text: 'Silakan masukkan NISN Anda.' });
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm mr-2"></span> Memverifikasi data...`;
+
+      Promise.all([
+        fetch(MASTER_CSV).then(res => res.text()),
+        fetch(FILLED_CSV).then(res => res.text())
+      ]).then(([master, filled]) => {
+        const masterRows = master.trim().split('\n').slice(1).map(row => row.split(','));
+        const nisnFixed = nisn.replace(/^0+/, '');
+        const data = masterRows.find(row => row[1]?.trim().replace(/^0+/, '') === nisnFixed);
+
+        if (!data) {
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = 'Login';
+          return Swal.fire({
+            icon: 'warning',
+            title: 'NISN Tidak Ditemukan',
+            html: "NISN tidak ditemukan pada database kami.<br>Jika menurut Anda ini sebuah kesalahan, hubungi <b>Nafi'</b> di <b>085731707313</b>."
+          });
+        }
+
+        const [id, nisnData, nama, tgl, smp, jalur] = data;
+        const filledRows = filled.trim().split('\n').slice(1).map(row => row.split(','));
+        const already = filledRows.find(row => row[2]?.trim().replace(/^0+/, '') === nisnFixed);
+
+        const info = { nisn, nama, tgl, smp, jalur, already: !!already };
+        localStorage.setItem(sessionKey, JSON.stringify({ ...info, time: Date.now() }));
+        showMain(info);
+      }).catch(() => {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = 'Login';
+        Swal.fire('Gagal', 'Terjadi kesalahan saat menghubungi server.', 'error');
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem(sessionKey);
+      location.reload();
+    }
+
+    function showMain(data) {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('main-section').style.display = 'block';
+      document.getElementById('jalur').innerText = 'Jalur: ' + data.jalur;
+      document.getElementById('greeting').innerText = `${getGreeting()}, ${data.nama}`;
+
+      if (data.already) {
+        document.getElementById('form-container').innerHTML = `
+          <div class="alert alert-warning">
+            <strong>Data telah diisi sebelumnya!</strong> Silakan hubungi Nafi' [085731707313] jika terdapat kesalahan.
+          </div>
+          <div class="mt-4">
+            <div class="row">
+              <div class="col-md-6"><strong>Nama:</strong> ${data.nama}</div>
+              <div class="col-md-6"><strong>NISN:</strong> ${data.nisn}</div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-6"><strong>Tanggal Lahir:</strong> ${data.tgl}</div>
+              <div class="col-md-6"><strong>Asal Sekolah:</strong> ${data.smp}</div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-6"><strong>Jalur:</strong> ${data.jalur}</div>
+            </div>
+          </div>
+        `;
+      } else {
+        loadForm(data);
+      }
+    }
+
+    function loadForm(data) {
+      const form = document.getElementById('upload-form');
+      form.style.display = 'block';
+      document.getElementById('nama').value = data.nama;
+      document.getElementById('nisn').value = data.nisn;
+      document.getElementById('tgl-lahir').value = data.tgl;
+      document.getElementById('smp').value = data.smp;
+      document.getElementById('jalurs').value = data.jalur;
+      initUploadForm();
+    }
+
+    function initUploadForm() {
+      const form = document.getElementById("upload-form");
+      ["kk", "akta", "rapor", "foto"].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            document.getElementById(id + "-info").innerText = file ? `1. ${file.name}` : "";
+          });
+        }
+      });
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const files = {
+          kk: document.getElementById("kk").files[0],
+          akta: document.getElementById("akta").files[0],
+          rapor: document.getElementById("rapor").files[0],
+          foto: document.getElementById("foto").files[0],
+        };
+
+        const validations = [
+          { file: files.kk, type: "application/pdf", max: 1 },
+          { file: files.akta, type: "application/pdf", max: 1 },
+          { file: files.rapor, type: "application/pdf", max: 1 },
+          { file: files.foto, type: ["image/jpeg", "image/png"], max: 1 },
+        ];
+
+        for (let { file, type, max } of validations) {
+          if (!file || (Array.isArray(type) ? !type.includes(file.type) : file.type !== type) || file.size > max * 1024 * 1024) {
+            return swal("Error", `Format atau ukuran file salah. Max ${max}MB.`, "error");
+          }
+        }
+
+        const readerPromises = Object.entries(files).map(([key, file]) => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve({ key, value: reader.result.split(",")[1] });
+            reader.readAsDataURL(file);
+          });
+        });
+
+        const results = await Promise.all(readerPromises);
+        const formData = new FormData();
+        formData.append("nama", document.getElementById("nama").value);
+        formData.append("nisn", document.getElementById("nisn").value);
+        formData.append("tgl-lahir", document.getElementById("tgl-lahir").value);
+        formData.append("wa", document.getElementById("wa").value);
+        formData.append("smp", document.getElementById("smp").value);
+        formData.append("jalur", document.getElementById("jalurs").value);
+        results.forEach(({ key, value }) => formData.append(key, value));
+
+        const submitBtn = form.querySelector("button");
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Mengupload...";
+
+        fetch(scriptURL, { method: "POST", body: formData })
+          .then(() => {
+            Swal.fire("Sukses", "Data berhasil dikirim!", "success").then(() => {
+              const session = JSON.parse(localStorage.getItem(sessionKey));
+              session.already = true;
+              localStorage.setItem(sessionKey, JSON.stringify(session));
+              showMain(session);
+            });
+          })
+          .catch(() => swal("Gagal", "Terjadi kesalahan saat mengirim.", "error"))
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Kirim Pendaftaran";
+          });
+      });
+    }
+
+    const session = JSON.parse(localStorage.getItem(sessionKey));
+    if (session && Date.now() - session.time < 3600000) {
+      showMain(session);
+      setTimeout(() => logout(), 3600000);
+    }
+  </script>
+</body>
+</html>

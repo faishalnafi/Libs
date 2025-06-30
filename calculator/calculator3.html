@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Responsif (Bootstrap & Modern UI)</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* =================================
+           VARIABEL WARNA & STYLING DASAR
+           ================================= */
+        :root {
+            /* Tema Terang (Default) */
+            --bg-body: #f0f2f5;
+            --bg-window: rgba(255, 255, 255, 0.7); /* Efek kaca untuk glassmorphism */
+            --bg-screen: rgba(248, 249, 250, 0.75);
+            --text-primary: #212529;
+            --text-secondary: #5a6168;
+            --btn-dark-bg: #e9ecef;
+            --btn-dark-text: #212529;
+            --btn-grey-bg: #dee2e6;
+            --btn-grey-text: #212529;
+            --btn-operator-bg: #ff9500;
+            --btn-operator-text: #ffffff;
+            --window-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15);
+            --border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Tema Gelap */
+        body.dark-mode {
+            --bg-body: #1c1c1e;
+            --bg-window: rgba(44, 45, 49, 0.7); /* Efek kaca untuk dark mode */
+            --bg-screen: rgba(28, 29, 33, 0.75);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --btn-dark-bg: #505050;
+            --btn-dark-text: #ffffff;
+            --btn-grey-bg: #a5a5a5;
+            --btn-grey-text: #1c1c1c;
+            --window-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Styling utama untuk body */
+        body {
+            background: var(--bg-body);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: background-color 0.4s ease;
+            /* Latar belakang gradien untuk efek visual yang lebih kaya */
+            background-image: linear-gradient(120deg, var(--bg-body) 0%, #e9ecef 100%);
+        }
+        
+        body.dark-mode {
+             background-image: linear-gradient(120deg, var(--bg-body) 0%, #2c2d31 100%);
+        }
+
+        /* =================================
+           WINDOW KALKULATOR UTAMA (RESPONSIF)
+           ================================= */
+        /* Animasi jelly float yang telah disempurnakan */
+        @keyframes jelly-float-in {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05); /* Sedikit membesar (overshoot) */
+                opacity: 1;
+            }
+            70% {
+                transform: scale(0.95); /* Memantul kembali */
+            }
+            100% {
+                transform: scale(1); /* Kembali ke ukuran normal */
+            }
+        }
+
+        .calculator-window {
+            width: 100%;
+            background: var(--bg-window);
+            /* Glassmorphism Effect */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--window-shadow);
+            position: relative;
+            /* Menggunakan animasi yang telah disempurnakan dengan timing function yang mendukung efek pantulan */
+            animation: jelly-float-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            transition: all 0.4s ease;
+            
+            /* Mobile-first: Fullscreen di perangkat kecil */
+            min-height: 100vh;
+            padding: 1.5rem 1rem;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Style untuk Tablet dan Desktop (Non-Fullscreen) */
+        @media (min-width: 480px) {
+            .calculator-window {
+                width: auto;
+                min-height: auto;
+                max-width: 390px;
+                border-radius: 1.75rem; /* Sudut lebih membulat ala macOS */
+                padding: 1.25rem;
+            }
+        }
+        
+        /* =================================
+           HEADER & DARK MODE SWITCH
+           ================================= */
+        .window-header {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 30px;
+            padding: 0 0.5rem;
+        }
+        .window-dots .dot { height: 12px; width: 12px; border-radius: 50%; margin-right: 8px; display: inline-block; }
+        .dot.red { background-color: #ff5f56; }
+        .dot.yellow { background-color: #ffbd2e; }
+        .dot.green { background-color: #27c93f; }
+        .theme-switch { display: inline-block; height: 22px; position: relative; width: 40px; }
+        .theme-switch input { display: none; }
+        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
+        .slider:before { background-color: #fff; bottom: 3px; content: ""; height: 16px; left: 3px; position: absolute; transition: .4s; width: 16px; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--btn-operator-bg); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        /* =================================
+           LAYAR & TOMBOL KALKULATOR
+           ================================= */
+        .calculator-screen {
+            background: var(--bg-screen);
+            color: var(--text-primary);
+            border-radius: 0.75rem;
+            width: 100%;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            text-align: right;
+            word-wrap: break-word;
+            word-break: break-all;
+            transition: all 0.4s ease;
+            flex-grow: 1; /* Biarkan layar memanjang di mobile */
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 480px) {
+            .calculator-screen {
+                flex-grow: 0;
+                height: 120px;
+            }
+        }
+        #history-view { font-size: 1rem; color: var(--text-secondary); height: 30px; overflow: hidden; }
+        #display { font-size: 3.5rem; font-weight: 500; min-height: 65px; line-height: 1.2; }
+        
+        /* Grid tombol yang fleksibel */
+        .buttons-grid {
+            flex-shrink: 0;
+        }
+        .buttons-grid .col {
+            padding: 0.3rem; /* Jarak antar tombol */
+        }
+        .btn-calc {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Menjaga tombol tetap bulat sempurna dan responsif */
+            height: auto;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.6rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn-calc:active {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transform: scale(0.95);
+        }
+        
+        .btn-grey { background-color: var(--btn-grey-bg); color: var(--btn-grey-text); }
+        .btn-operator { background-color: var(--btn-operator-bg); color: var(--btn-operator-text); }
+        .btn-dark { background-color: var(--btn-dark-bg); color: var(--btn-dark-text); }
+        
+        /* Ukuran font responsif untuk tombol */
+        @media (max-width: 360px) {
+            .btn-calc { font-size: 1.4rem; }
+        }
+        @media (min-width: 480px) {
+            .buttons-grid .col { padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Frame utama kalkulator -->
+    <div class="calculator-window">
+        <!-- Header dengan tombol kontrol dan switch mode gelap -->
+        <div class="window-header">
+            <div class="window-dots">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            </div>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Layar Kalkulator -->
+        <div class="calculator-screen">
+            <div id="history-view">&nbsp;</div>
+            <div id="display">0</div>
+        </div>
+
+        <!-- Grid Tombol Kalkulator menggunakan Bootstrap (lebih fleksibel) -->
+        <div class="buttons-grid container-fluid">
+            <div class="row row-cols-4 g-0"> <!-- `row-cols-4` untuk 4 kolom, `g-0` hapus gutter default -->
+                <div class="col"><button class="btn-calc btn-grey" data-action="clear">AC</button></div>
+                <div class="col"><button class="btn-calc btn-grey" data-action="parentheses">()</button></div>
+                <div class="col"><button class="btn-calc btn-grey" data-action="percent">%</button></div>
+                <div class="col"><button class="btn-calc btn-operator" data-action="operator" data-key="/">÷</button></div>
+
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="7">7</button></div>
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="8">8</button></div>
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="9">9</button></div>
+                <div class="col"><button class="btn-calc btn-operator" data-action="operator" data-key="*">×</button></div>
+
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="4">4</button></div>
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="5">5</button></div>
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="6">6</button></div>
+                <div class="col"><button class="btn-calc btn-operator" data-action="operator" data-key="-">−</button></div>
+
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="1">1</button></div>
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="2">2</button></div>
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="3">3</button></div>
+                <div class="col"><button class="btn-calc btn-operator" data-action="operator" data-key="+">+</button></div>
+
+                <div class="col"><button class="btn-calc btn-dark" data-action="number" data-key="0">0</button></div>
+                <div class="col"><button class="btn-calc btn-dark" data-action="decimal" data-key=".">,</button></div>
+                <div class="col"><button class="btn-calc btn-dark" data-action="backspace">
+                    <!-- Ikon SVG untuk Backspace, lebih modern -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708L8.683 8.707l2.147 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z"/>
+                      <path d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z"/>
+                    </svg>
+                </button></div>
+                <div class="col"><button class="btn-calc btn-operator" data-action="equals" data-key="=">=</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logika JavaScript (Kelas Calculator) tidak berubah sama sekali
+        // karena sudah terstruktur dengan baik dan terpisah dari DOM.
+        // Bagian ini hanya bertanggung jawab atas kalkulasi.
+        class Calculator {
+            constructor(displayElement, historyElement) { this.displayElement = displayElement; this.historyElement = historyElement; this.clear(); }
+            clear() { this.currentInput = '0'; this.history = ''; this.openParentheses = 0; this.shouldResetDisplay = false; this.updateDisplay(); }
+            backspace() { if (this.currentInput.length === 1 || this.shouldResetDisplay) { this.currentInput = '0'; } else { const removed = this.currentInput.slice(-1); if (removed === '(') this.openParentheses--; if (removed === ')') this.openParentheses++; this.currentInput = this.currentInput.slice(0, -1); } this.updateDisplay(); }
+            appendNumber(number) { if (this.currentInput === '0' || this.shouldResetDisplay) { this.currentInput = number; this.shouldResetDisplay = false; } else { this.currentInput += number; } this.updateDisplay(); }
+            appendDecimal() { if (this.shouldResetDisplay) { this.currentInput = '0.'; this.shouldResetDisplay = false; return; } const parts = this.currentInput.split(/[\+\-\*\/]/); if (!parts[parts.length - 1].includes('.')) { this.currentInput += '.'; } this.updateDisplay(); }
+            appendOperator(operator) { const lastChar = this.currentInput.slice(-1); if (['+', '-', '*', '/'].includes(lastChar) || lastChar === '(') return; this.currentInput += operator; this.shouldResetDisplay = false; this.updateDisplay(); }
+            handleParentheses() { const lastChar = this.currentInput.slice(-1); if (this.shouldResetDisplay || this.currentInput === '0') { this.currentInput = '('; this.openParentheses++; } else if (!isNaN(parseInt(lastChar)) || lastChar === ')') { if (this.openParentheses > 0) { this.currentInput += ')'; this.openParentheses--; } } else { this.currentInput += '('; this.openParentheses++; } this.shouldResetDisplay = false; this.updateDisplay(); }
+            calculatePercent() { try { const result = this.safeEval(this.currentInput) / 100; this.history = `${this.formatExpression(this.currentInput)}% =`; this.currentInput = result.toString(); this.shouldResetDisplay = true; } catch { this.currentInput = 'Error'; } this.updateDisplay(); }
+            calculateEquals() { if (this.openParentheses > 0) { this.currentInput += ')'.repeat(this.openParentheses); this.openParentheses = 0; } this.history = `${this.formatExpression(this.currentInput)} =`; try { const result = this.safeEval(this.currentInput); this.currentInput = (Math.round(result * 1e12) / 1e12).toString(); } catch { this.currentInput = 'Error'; } this.shouldResetDisplay = true; this.updateDisplay(); }
+            safeEval(expression) { return new Function('return ' + expression)(); }
+            updateDisplay() { this.displayElement.textContent = this.formatExpression(this.currentInput); this.historyElement.textContent = this.history; const len = this.displayElement.textContent.length; if (len > 12) { this.displayElement.style.fontSize = '2rem'; } else if (len > 9) { this.displayElement.style.fontSize = '2.5rem'; } else if (len > 7) { this.displayElement.style.fontSize = '3rem'; } else { this.displayElement.style.fontSize = '3.5rem'; } }
+            formatExpression(expression) { return expression.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\./g, ','); }
+            chooseAction(action, key) { switch(action) { case 'number': this.appendNumber(key); break; case 'operator': this.appendOperator(key); break; case 'decimal': this.appendDecimal(); break; case 'clear': this.clear(); break; case 'backspace': this.backspace(); break; case 'parentheses': this.handleParentheses(); break; case 'percent': this.calculatePercent(); break; case 'equals': this.calculateEquals(); break; } }
+        }
+
+        /**
+         * =============================================
+         * INISIALISASI & MANIPULASI DOM
+         * =============================================
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            const displayElement = document.getElementById('display');
+            const historyElement = document.getElementById('history-view');
+            const buttons = document.querySelectorAll('.btn-calc');
+            const themeToggle = document.getElementById('checkbox');
+            const calculator = new Calculator(displayElement, historyElement);
+
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const { action, key } = button.dataset;
+                    calculator.chooseAction(action, key);
+                });
+            });
+
+            // Fungsi untuk beralih mode dan menyimpan preferensi
+            function switchTheme(e) {
+                if (e.target.checked) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark'); // Simpan preferensi
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('theme', 'light'); // Simpan preferensi
+                }
+            }
+            
+            themeToggle.addEventListener('change', switchTheme, false);
+
+            // Cek preferensi tema yang tersimpan saat memuat halaman
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+            }
+        });
+    </script>
+
+</body>
+</html>

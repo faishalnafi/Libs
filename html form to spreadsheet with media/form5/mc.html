@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sedang Dalam Perbaikan - SMA Negeri 1 Gedeg</title>
+    <link rel="icon" href="https://partisipasi.smage.my.id/logo_smansage.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {  
+            theme: {  
+                extend: {  
+                    colors: {  
+                        primary: '#40A69F',  
+                        secondary: '#4F46B4',  
+                        danger: '#DC2527',  
+                        accent1: '#FF576F',  
+                        accent2: '#FDB402',  
+                        background: '#F5F5F5',  
+                    }  
+                }  
+            }  
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        .countdown-item {
+            position: relative;
+        }
+        
+        @media (min-width: 640px) {
+            .countdown-item:not(:last-child)::after {
+                content: ':';
+                position: absolute;
+                right: -12px;
+                top: 50%;
+                transform: translateY(-60%);
+                font-size: 2rem;
+                font-weight: 700;
+                color: #40A69F;
+            }
+        }
+        
+        @media (max-width: 639px) {
+            .countdown-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .countdown-item {
+                margin-right: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col items-center justify-center p-4">
+    <!-- CONFIGURATION - EDIT THESE VALUES TO CHANGE THE COUNTDOWN AND STATUS -->
+    <script>
+        // Set your target date and time here (format: YYYY-MM-DD HH:MM:SS)
+        const TARGET_DATE = "2025-06-21 06:00:00";
+        
+        // Set the status: "maintenance" or "closed"
+        const PAGE_STATUS = "closed";
+    </script>
+    
+    <div class="max-w-3xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Header -->
+        <div id="header" class="bg-primary p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between">
+                <div class="flex items-center mb-4 sm:mb-0">
+                    <img src="https://partisipasi.smage.my.id/logo_smansage.png" alt="SMANSAGE Logo" class="h-12 sm:h-14 md:h-16 mr-3 sm:mr-4 bg-white p-1 rounded-lg">
+                    <div>
+                        <h1 class="text-white text-lg sm:text-xl md:text-2xl font-bold">SMA Negeri 1 Gedeg</h1>
+                        <p class="text-white/80 text-xs sm:text-sm">Pendaftaran Ulang SPMB</p>
+                    </div>
+                </div>
+                <div id="status-badge" class="px-3 py-1 sm:px-4 sm:py-2 bg-white rounded-md">
+                    <p id="status-text" class="font-medium text-xs sm:text-sm">Status: Loading...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-4 sm:p-6 md:p-10">
+            <!-- Main Content -->
+            <div class="mb-8 sm:mb-12 text-center">
+                <div class="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto mb-4 sm:mb-6">
+                    <svg id="icon-maintenance" class="w-full h-full text-primary hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
+                    </svg>
+                    
+                    <svg id="icon-closed" class="w-full h-full text-danger hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                    
+                    <div id="icon-badge" class="absolute top-0 right-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 00-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 00-2.282.819l-.922 1.597a1.875 1.875 0 00.432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 000 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 00-.432 2.385l.922 1.597a1.875 1.875 0 002.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 002.28-.819l.923-1.597a1.875 1.875 0 00-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 000-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 00-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 00-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 00-1.85-1.567h-1.843z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <h1 id="title" class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3">Mohon Maaf</h1>
+                <h2 id="subtitle" class="text-lg sm:text-xl md:text-2xl font-medium text-primary mb-4 sm:mb-6"></h2>
+                
+                <p id="description" class="text-gray-600 mb-6 sm:mb-8 max-w-lg mx-auto text-sm sm:text-base"></p>
+                
+                <div id="closed-message" class="hidden">
+                    <p class="text-gray-600 mb-4 max-w-lg mx-auto text-sm sm:text-base">
+                        Halaman ini akan dibuka kembali saat periode pendaftaran ulang SPMB.
+                    </p>
+                    <div class="inline-block bg-danger/10 rounded-lg px-4 py-2 sm:px-6 sm:py-3 mb-6">
+                        <p class="text-base sm:text-lg font-bold text-danger">Terima kasih atas perhatiannya</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Countdown -->
+            <div id="countdown-section" class="mb-8 sm:mb-12">
+                <div class="flex items-center justify-center mb-4 sm:mb-6">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clip-rule="evenodd" />
+                    </svg>
+                    <h3 class="text-base sm:text-lg font-semibold text-primary">Akan Dibuka Kembali Pada:</h3>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="inline-block bg-primary/10 rounded-lg px-4 py-2 sm:px-6 sm:py-3">
+                        <p id="reopenDate" class="text-base sm:text-lg md:text-xl font-bold text-primary"></p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center">
+                    <div id="countdown" class="countdown-container flex sm:space-x-6 md:space-x-8">
+                        <div class="countdown-item">
+                            <div class="bg-white border-b-4 border-primary rounded-lg p-2 sm:p-3 w-full sm:w-16 md:w-20 shadow-sm">
+                                <div id="days" class="text-xl sm:text-2xl md:text-3xl font-bold text-primary">00</div>
+                                <div class="text-xs text-gray-500 font-medium">HARI</div>
+                            </div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="bg-white border-b-4 border-secondary rounded-lg p-2 sm:p-3 w-full sm:w-16 md:w-20 shadow-sm">
+                                <div id="hours" class="text-xl sm:text-2xl md:text-3xl font-bold text-secondary">00</div>
+                                <div class="text-xs text-gray-500 font-medium">JAM</div>
+                            </div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="bg-white border-b-4 border-accent1 rounded-lg p-2 sm:p-3 w-full sm:w-16 md:w-20 shadow-sm">
+                                <div id="minutes" class="text-xl sm:text-2xl md:text-3xl font-bold text-accent1">00</div>
+                                <div class="text-xs text-gray-500 font-medium">MENIT</div>
+                            </div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="bg-white border-b-4 border-accent2 rounded-lg p-2 sm:p-3 w-full sm:w-16 md:w-20 shadow-sm">
+                                <div id="seconds" class="text-xl sm:text-2xl md:text-3xl font-bold text-accent2">00</div>
+                                <div class="text-xs text-gray-500 font-medium">DETIK</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="flex justify-center">
+                <a href="https://wa.me/6285155030300" target="_blank" class="bg-white border-2 border-primary rounded-lg p-3 sm:p-4 flex items-center hover:bg-primary/5 transition-colors shadow-sm w-full max-w-xs">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-xs sm:text-sm text-gray-500">Hubungi Kami via WhatsApp</p>
+                        <p class="font-medium text-sm sm:text-base">0851-5503-0300</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="bg-white p-4 text-center border-t">
+            <p class="text-gray-500 text-xs sm:text-sm">&copy; 2025 SMA Negeri 1 Gedeg</p>
+        </div>
+    </div>
+
+    <script>
+        // Parse the target date from the configuration
+        const targetDateStr = TARGET_DATE;
+        const countDownDate = new Date(targetDateStr).getTime();
+        const pageStatus = PAGE_STATUS.toLowerCase();
+        
+        // Set up the page based on status
+        function setupPage() {
+            // Default values for maintenance status
+            let headerClass = "bg-primary";
+            let statusBadgeClass = "text-primary";
+            let statusText = "Status: Maintenance";
+            let title = "Mohon Maaf";
+            let subtitle = "Sedang Dalam Perbaikan";
+            let description = "Saat ini kami sedang melakukan perbaikan dan peningkatan sistem untuk memberikan pengalaman yang lebih baik.";
+            let iconBadgeClass = "bg-accent2";
+            let showCountdown = true;
+            let showClosedMessage = false;
+            
+            // Override values for closed status
+            if (pageStatus === "closed") {
+                headerClass = "bg-danger";
+                statusBadgeClass = "text-danger";
+                statusText = "Status: Ditutup";
+                title = "Mohon Maaf";
+                subtitle = "Halaman Ditutup";
+                description = "Saat ini halaman tidak dapat diakses karena periode pendaftaran telah berakhir.";
+                iconBadgeClass = "bg-danger";
+                showClosedMessage = true;
+                showCountdown = false;
+            }
+            
+            // Apply the settings
+            document.getElementById("header").className = `${headerClass} p-4 sm:p-6`;
+            document.getElementById("status-text").className = `${statusBadgeClass} font-medium text-xs sm:text-sm`;
+            document.getElementById("status-text").textContent = statusText;
+            document.getElementById("title").textContent = title;
+            document.getElementById("title").className = `text-2xl sm:text-3xl md:text-4xl font-bold ${pageStatus === "closed" ? "text-danger" : "text-primary"} mb-2 sm:mb-3`;
+            document.getElementById("subtitle").textContent = subtitle;
+            document.getElementById("subtitle").className = `text-lg sm:text-xl md:text-2xl font-medium ${pageStatus === "closed" ? "text-danger" : "text-primary"} mb-4 sm:mb-6`;
+            document.getElementById("description").textContent = description;
+            document.getElementById("icon-badge").className = `absolute top-0 right-0 w-6 h-6 sm:w-8 sm:h-8 ${iconBadgeClass} rounded-full flex items-center justify-center`;
+            
+            // Show the appropriate icon
+            if (pageStatus === "maintenance") {
+                document.getElementById("icon-maintenance").classList.remove("hidden");
+            } else {
+                document.getElementById("icon-closed").classList.remove("hidden");
+            }
+            
+            // Show/hide countdown section
+            if (!showCountdown) {
+                document.getElementById("countdown-section").classList.add("hidden");
+            }
+            
+            // Show/hide closed message
+            if (showClosedMessage) {
+                document.getElementById("closed-message").classList.remove("hidden");
+            }
+            
+            // Update WhatsApp button styling based on status
+            const whatsappButton = document.querySelector('a[href^="https://wa.me"]');
+            if (pageStatus === "closed") {
+                whatsappButton.className = "bg-white border-2 border-danger rounded-lg p-3 sm:p-4 flex items-center hover:bg-danger/5 transition-colors shadow-sm w-full max-w-xs";
+                whatsappButton.querySelector("div:first-child").className = "w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-danger/10 flex items-center justify-center mr-3";
+                whatsappButton.querySelector("svg").className = "w-5 h-5 sm:w-6 sm:h-6 text-danger";
+            }
+        }
+        
+        // Format the reopening date for display
+        const formatReopenDate = () => {
+            const targetDate = new Date(targetDateStr);
+            
+            // Indonesian months and days
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            
+            const day = days[targetDate.getDay()];
+            const date = targetDate.getDate();
+            const month = months[targetDate.getMonth()];
+            const year = targetDate.getFullYear();
+            const hours = targetDate.getHours().toString().padStart(2, '0');
+            const minutes = targetDate.getMinutes().toString().padStart(2, '0');
+            
+            // For mobile screens, use a shorter format
+            if (window.innerWidth < 640) {
+                return `${date} ${month} ${year}, ${hours}:${minutes} WIB`;
+            }
+            
+            return `${day}, ${date} ${month} ${year} - ${hours}:${minutes} WIB`;
+        };
+        
+        // Set the reopening date text
+        document.getElementById("reopenDate").textContent = formatReopenDate();
+        
+        // Update the countdown every 1 second
+        const updateCountdown = function() {
+            // Only update if we're showing the countdown
+            if (pageStatus === "maintenance") {
+                // Get today's date and time
+                const now = new Date().getTime();
+                
+                // Find the distance between now and the count down date
+                const distance = countDownDate - now;
+                
+                // Time calculations for days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Display the result
+                document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
+                document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+                document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+                document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+                
+                // If the count down is finished, write some text
+                if (distance < 0) {
+                    clearInterval(x);
+                    
+                    const countdownElement = document.getElementById("countdown");
+                    countdownElement.classList.remove("countdown-container");
+                    countdownElement.classList.add("flex", "justify-center");
+                    
+                    countdownElement.innerHTML = `<div class='text-base sm:text-xl font-bold text-primary bg-primary/10 px-4 py-3 rounded-lg'>Sistem Telah Dibuka!</div>`;
+                    document.getElementById("reopenDate").parentElement.style.display = "none";
+                }
+            }
+        };
+        
+        // Initialize the page
+        setupPage();
+        
+        // Initial update
+        updateCountdown();
+        
+        // Update every second
+        const x = setInterval(updateCountdown, 1000);
+        
+        // Handle window resize for responsive date format
+        window.addEventListener('resize', function() {
+            if (pageStatus === "maintenance") {
+                document.getElementById("reopenDate").textContent = formatReopenDate();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'952a8e3d00379b07',t:'MTc1MDQxNTA1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -41,7 +41,6 @@
         </div>
 
         <div id="form-container">
-          <!-- FORM DISISIPKAN DAN DISEMBUNYIKAN DULU -->
           <form id="upload-form" style="display:none">
             <div class="mb-4">
               <div class="section-title">Data Diri</div>
@@ -116,31 +115,33 @@
         const hour = new Date().getHours();
         if (hour < 12) return 'Selamat pagi';
         else if (hour < 17) return 'Selamat siang';
-        else if (hour < 20 ) return 'Selamat Sore';
+        else if (hour < 20 ) return 'Selamat sore';
         else return 'Selamat malam';
       }
 
       function handleLogin() {
-        const nisn = document.getElementById('login-nisn').value.trim();
-        if (!nisn) return Swal('Error', 'NISN wajib diisi!', 'error');
-
-        Promise.all([
-          fetch(MASTER_CSV).then(res => res.text()),
-          fetch(FILLED_CSV).then(res => res.text())
-        ]).then(([master, filled]) => {
-          const masterRows = master.trim().split('\n').slice(1).map(row => row.split(','));
-          const data = masterRows.find(row => row[1] === nisn);
-          if (!data) return Swal('NISN Tidak Ditemukan', 'Silakan hubungi admin jika ini kesalahan.', 'warning');
-
-          const [id, nisnData, nama, tgl, smp, jalur] = data;
-          const filledRows = filled.trim().split('\n').slice(1).map(row => row.split(','));
-          const already = filledRows.find(row => row[1] === nisn);
-
-          const info = { nisn, nama, tgl, smp, jalur, already: !!already };
-          localStorage.setItem(sessionKey, JSON.stringify({ ...info, time: Date.now() }));
-          showMain(info);
-        });
-      }
+      const nisn = document.getElementById('login-nisn').value.trim();
+      if (!nisn) return Swal('Error', 'NISN wajib diisi!', 'error');
+    
+      Promise.all([
+        fetch(MASTER_CSV).then(res => res.text()),
+        fetch(FILLED_CSV).then(res => res.text())
+      ]).then(([master, filled]) => {
+        const masterRows = master.trim().split('\n').slice(1).map(row => row.split(','));
+        const data = masterRows.find(row => row[1] === nisn);
+        if (!data) return Swal('NISN Tidak Ditemukan', 'Silakan hubungi admin jika ini kesalahan.', 'warning');
+    
+        const [id, nisnData, nama, tgl, smp, jalur] = data;
+    
+        // 🟡 GUNAKAN KOLOM INDEX 2 UNTUK NISN DI CSV FILLED
+        const filledRows = filled.trim().split('\n').slice(1).map(row => row.split(','));
+        const already = filledRows.find(row => row[2]?.trim().replace(/^0+/, '') === nisn.trim().replace(/^0+/, ''));
+    
+        const info = { nisn, nama, tgl, smp, jalur, already: !!already };
+        localStorage.setItem(sessionKey, JSON.stringify({ ...info, time: Date.now() }));
+        showMain(info);
+      });
+    }
 
       function logout() {
         localStorage.removeItem(sessionKey);
@@ -154,7 +155,25 @@
         document.getElementById('greeting').innerText = `${getGreeting()}, ${data.nama}`;
 
         if (data.already) {
-          document.getElementById('form-container').innerHTML = `<div class="alert alert-info">Anda telah mengisi data sebelumnya dan hanya bisa mengisi 1x. Jika ada kesalahan silakan hubungi admin.</div>`;
+          document.getElementById('form-container').innerHTML = `
+            <div class="alert alert-warning">
+              <strong>Data telah diisi!</strong> Silakan hubungi operator jika terdapat kesalahan.
+              Bila ada pertanyaan, silakan diskusikan di grup.
+            </div>
+            <div class="mt-4">
+              <div class="row">
+                <div class="col-md-6"><strong>Nama:</strong> ${data.nama}</div>
+                <div class="col-md-6"><strong>NISN:</strong> ${data.nisn}</div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-6"><strong>Tanggal Lahir:</strong> ${data.tgl}</div>
+                <div class="col-md-6"><strong>Asal Sekolah:</strong> ${data.smp}</div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-6"><strong>Jalur:</strong> ${data.jalur}</div>
+              </div>
+            </div>
+          `;
         } else {
           loadForm(data);
         }
@@ -215,13 +234,13 @@
           });
 
           const results = await Promise.all(readerPromises);
-            const formData = new FormData();
-            formData.append("nama", document.getElementById("nama").value);
-            formData.append("nisn", document.getElementById("nisn").value);
-            formData.append("tgl-lahir", document.getElementById("tgl-lahir").value);
-            formData.append("wa", document.getElementById("wa").value);
-            formData.append("smp", document.getElementById("smp").value);
-            formData.append("jalur", document.getElementById("jalurs").value);
+          const formData = new FormData();
+          formData.append("nama", document.getElementById("nama").value);
+          formData.append("nisn", document.getElementById("nisn").value);
+          formData.append("tgl-lahir", document.getElementById("tgl-lahir").value);
+          formData.append("wa", document.getElementById("wa").value);
+          formData.append("smp", document.getElementById("smp").value);
+          formData.append("jalur", document.getElementById("jalurs").value);
           results.forEach(({ key, value }) => formData.append(key, value));
 
           const submitBtn = form.querySelector("button");
